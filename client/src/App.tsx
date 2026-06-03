@@ -11,10 +11,24 @@ import { OrderTracking } from "./pages/OrderTracking";
 import { SearchResult } from "./pages/SearchResult";
 import { FlashDeals } from "./pages/FlashDeals";
 import { Addresses } from "./pages/Addresses";
+import { Toaster } from "react-hot-toast";
 
 export function App() {
   return (
     <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#1B3022",
+            color: "#fff",
+            borderRadius: "12px",
+            fontSize: "14px",
+          },
+        }}
+      />
+
       <Routes>
         {/* Auth pages - Sem navbar / Footer */}
         <Route path="/login" element={<Login />} />
@@ -30,7 +44,7 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="checkout" element={<Checkout />} />
             <Route path="orders" element={<MyOrders />} />
-            <Route path="orders/:id" element={<OrderTracking  />} />
+            <Route path="orders/:id" element={<OrderTracking />} />
             <Route path="addresses" element={<Addresses />} />
           </Route>
         </Route>

@@ -12,16 +12,16 @@ import {
   UserIcon,
   XIcon,
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export function NavBar() {
-  const user: object = {
-    name: "Andre Gideao",
-    email: "andre@gmail.com",
-    isAdmin: false,
-  };
-  // const user: any = null;
+  // const user: any = {
+  //   name: "Andre Gideao",
+  //   email: "andre@gmail.com",
+  //   isAdmin: true
+  // };
+  const user: any = null;
 
   const { cartCount, setIsCartOpen } = {
     cartCount: 5,
@@ -32,6 +32,18 @@ export function NavBar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
 
+  const handleSearch = (e: React.SubmitEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchQuery("")
+    }
+  }
+
+  const handleLogout = () => {
+    setUserMenuOpen(false)
+  }
+  
   return (
     <nav className="bg-white sticky top-0 z-50 border-b border-app-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
@@ -125,11 +137,10 @@ export function NavBar() {
                     className="fixed ins et-0 z-40"
                     onClick={() => setIsCartOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2.5 w-56 border-white rounded-xl py-2 z-50 animate-fade-in">
+                  <div className="absolute right-0 mt-2.5 w-56 border-white rounded-xl py-2 z-50 animate-fade-in  bg-white">
                     {user && (
                       <div className="px-4 py-2 border-b border-app-border">
                         <p className="text-sm font-medium text-zinc-900">
-                       «
                           {user?.name}
                         </p>
                         <p className="text-xs text-zinc-500">{user?.email}</p>
@@ -153,17 +164,16 @@ export function NavBar() {
                       {user && (
                         <Link to="/addresses" className="dropdown-link">
 
-                          <MapPinIcon size={16} /> Endereços{" "}
+                          <MapPinIcon size={16} /> Endereços
                         </Link>
                       )}
 
                       <Link to="/products" className="dropdown-link md:hidden">
-                        {" "}
-                        <ArrowRightIcon size={16} /> Produtos{" "}
+                        <ArrowRightIcon size={16} /> Produtos
                       </Link>
 
                       <Link to="/deals" className="dropdown-link md:hidden">
-                        <ArrowRightIcon size={16} /> Ofertas{" "}
+                        <ArrowRightIcon size={16} /> Ofertas
                       </Link>
 
                       {user?.isAdmin && (
@@ -184,7 +194,7 @@ export function NavBar() {
 
                       {user && (
                         <div className="border-t border-app-border pt-1">
-                          <button className="flex items-center gap-3 px-4 py-2.5 text-sm text-app-error hover:bg-red-50 w-full transition-colors">
+                          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-sm text-app-error hover:bg-red-50 w-full transition-colors">
                             <LogOutIcon size={16} />
                             Sair
                           </button>

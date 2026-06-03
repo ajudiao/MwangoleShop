@@ -1,5 +1,4 @@
 import { useState } from "react";
-import loginHero from "../assets/loginHero.jpg";
 import { Link } from "react-router-dom";
 import {
   BikeIcon,
@@ -8,6 +7,7 @@ import {
   MailIcon,
   UserIcon,
 } from "lucide-react";
+import { heroSectionData } from "../assets/assets";
 
 export function Login() {
   const [isLoginState, setIsLoginState] = useState(true);
@@ -27,7 +27,7 @@ export function Login() {
       {/* Left Side */}
       <div className="hidden lg:flex lg:w-1/2 bg-app-green relative items-center justify-center   ">
         <img
-          src={loginHero}
+          src={heroSectionData.hero_image}
           alt=""
           className="absolute inset-0 object-cover h-full bg-center opacity-10"
         />

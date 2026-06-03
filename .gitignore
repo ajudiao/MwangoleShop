@@ -8,6 +8,7 @@ node_modules/
 # BUILD / OUTPUT
 # =========================
 client/build/
+client/anotacoes.md
 client/dist/
 server/dist/
 dist/
