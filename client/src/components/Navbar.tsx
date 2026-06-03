@@ -30,15 +30,16 @@ export function NavBar() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // // const handleSearch = (e: React.SubmitEvent) => {
-  // //   e.preventDefault()
-  // //   if (searchQuery.trim()) {
-  // //     navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-  // //     setSearchQuery("")
-  // //   }
-  // // }
+ const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (searchQuery.trim()) {
+    navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    setSearchQuery("");
+  }
+};
 
   const handleLogout = () => {
     setUserMenuOpen(false)
@@ -66,7 +67,7 @@ export function NavBar() {
           </div>
 
           {/* Search */}
-          <form className="hidden sm:flex flex-1 max-w-sm text-xs ms:text-sm">
+          <form onSubmit={handleSearch} className="hidden sm:flex flex-1 max-w-sm text-xs ms:text-sm">
             <div className="relative w-full">
               <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500" />
 
