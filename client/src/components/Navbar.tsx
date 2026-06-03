@@ -16,12 +16,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export function NavBar() {
-  // const user: any = {
-  //   name: "Andre Gideao",
-  //   email: "andre@gmail.com",
-  //   isAdmin: true
-  // };
-  const user: any = null;
+  const user: any = {
+    name: "Andre Gideao",
+    email: "andre@gmail.com",
+    isAdmin: true
+  };
+  // const user: any = null;
 
   const { cartCount, setIsCartOpen } = {
     cartCount: 5,
@@ -30,15 +30,15 @@ export function NavBar() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleSearch = (e: React.SubmitEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-      setSearchQuery("")
-    }
-  }
+  // // const handleSearch = (e: React.SubmitEvent) => {
+  // //   e.preventDefault()
+  // //   if (searchQuery.trim()) {
+  // //     navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+  // //     setSearchQuery("")
+  // //   }
+  // // }
 
   const handleLogout = () => {
     setUserMenuOpen(false)
