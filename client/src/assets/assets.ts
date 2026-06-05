@@ -153,7 +153,7 @@ export const footerData = {
 
   contact: [
     { icon: MapPinIcon, text: "123 Green Valley Rd, Portland" },
-    { icon: PhoneIcon, text: "+1 (111) 123-4567" },
+    { icon: PhoneIcon, text: "+244 944 921 970" },
     { icon: MailIcon, text: "hello@example.com" },
   ],
 

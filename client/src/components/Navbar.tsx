@@ -17,14 +17,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 export function NavBar() {
   const user: any = {
-    name: "Andre Gideao",
+    name: "André Gideão",
     email: "andre@gmail.com",
     isAdmin: true
   };
   // const user: any = null;
 
   const { cartCount, setIsCartOpen } = {
-    cartCount: 5,
+    cartCount: 13,
     setIsCartOpen: (_data: any) => {},
   };
 

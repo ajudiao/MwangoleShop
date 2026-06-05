@@ -74,3 +74,5 @@ coverage/
 # TYPESCRIPT (se existir build local)
 # =========================
 *.tsbuildinfo
+
+CART_CONTEXT_GUIDE.md
