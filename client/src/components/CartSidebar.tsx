@@ -44,7 +44,7 @@ export function CartSidebar() {
 
             <h2 className="text-lg font-medium">Seu Carrinho</h2>
             <span className="px-2 py-0.5 text-xs font-semibold bg-app-cream rounded-full">
-              {items.length}
+              {items.length} itens
             </span>
           </div>
           <button
@@ -137,7 +137,7 @@ export function CartSidebar() {
             </div>
 
             <div className="flex justify-between text-sm">
-              <span className="text-app-text-light">Subtotal</span>
+              <span className="text-app-text-light">Entrega</span>
               <span className="font-medium">
                 {deliveryFee === 0 ? (
                   <span className="text-app-success">Grátis</span>
