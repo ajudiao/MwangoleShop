@@ -3,8 +3,10 @@ import type { Product } from "../types";
 import { Link, useSearchParams } from "react-router-dom";
 import { categoriesData, dummyProducts } from "../assets/assets";
 import { Home } from "./Home";
-import { ChevronDown, HomeIcon, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, HomeIcon, SlidersHorizontal, XIcon } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
+import { Loading } from "../components/Loading";
+import { FilterPanel } from "../components/FilterPanel";
 
 export function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,7 +41,7 @@ export function Products() {
   const clearFilters = () => setSearchParams({});
 
   const activeCategory = categoriesData.find((c) => c.slug === category);
-  const hasFilters = category || organic || minPrice || maxPrice;
+  const hasFilters = category || organic || minPrice || maxPrice
 
   useEffect(() => {
     fetchProducts();
@@ -64,7 +66,7 @@ export function Products() {
           {/* Sidebar - Desktop */}
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="bg-white rounded-2xl p-4 sticky top-24">
-              <p>Filter</p>
+              <FilterPanel  categories={categoriesData} category={category} organic={organic} minPrice={minPrice} maxPrice={maxPrice} updateFilter={updateFilter} hasFilter={hasFilters} />
             </div>
           </aside>
 
@@ -110,7 +112,7 @@ export function Products() {
             </div>
 
             {loading ? (
-              <p>Carregando...</p>
+              <Loading />
             ) : products.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-lg font-semibold text-app-green mb-2">
@@ -157,6 +159,27 @@ export function Products() {
           </main>
         </div>
       </div>
+
+      {/* Mobile filters Modal */}
+      {mobileFiltersOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-50" onClick={() => setMobileFiltersOpen(false)}>
+            <div className="fixed bottom-0 left-0 ring-0 w-full bg-white z-50 rounded-xl max-w-[80vh] overflow-y-auto animate-slid-in-up">
+              <div className="flex items-center justify-between p-4 border-b border-app-border">
+                <h3 className="text-lg font-semibold text-app-green">Filtros</h3>
+                <button onClick={() => setMobileFiltersOpen(false)} className="p-2 hover:bg-app-cream rounded-lg">
+                  <XIcon className="size-5" />
+                </button>
+              </div>
+
+              <div className="p-4">
+                 <FilterPanel  categories={categoriesData} category={category} organic={organic} minPrice={minPrice} maxPrice={maxPrice} updateFilter={updateFilter} hasFilter={hasFilters} />
+              </div>
+
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
