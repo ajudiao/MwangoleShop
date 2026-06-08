@@ -11,6 +11,7 @@ import {
 
 export function CartSidebar() {
   const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+  
   const {
     items,
     updateQuantity,
