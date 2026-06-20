@@ -71,11 +71,11 @@ export function Addresses() {
                 
                 {/* Page header */}
                 <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-2xl font-semibold text-app-green">My Addresses</h1>
-                    <button className="px-4 py-2 bg-app-green text-white font-semibold rounded-xl hover:bg-app-green-light transition-colors flex items-center gap-2" onClick={() => {resetForm(); setShowForm(true)}}>
-                        <PlusIcon className="size-4" />
-                        Add New Address
-                    </button>
+                    <h1 className="text-2xl font-semibold text-app-green">Meus Endereços</h1>
+                        <button className="px-4 py-2 bg-app-green text-white font-semibold rounded-xl hover:bg-app-green-light transition-colors flex items-center gap-2" onClick={() => {resetForm(); setShowForm(true)}}>
+                            <PlusIcon className="size-4" />
+                            Adicionar Novo Endereço
+                        </button>
                 </div>
 
                 {/* Form Modal */}
@@ -85,11 +85,11 @@ export function Addresses() {
                 {
                     loading ? (
                         <Loading />
-                    ) : addresses.length === 0 ? (
+                        ) : addresses.length === 0 ? (
                         <div className="text-center py-16">
                             <MapPinIcon className="size-16 text-app-border mx-auto mb-4" />
-                            <h2 className="text-lg font-semibold text-app-green mb-2">No addresses found</h2>
-                            <p className="text-sm text-app-text-light">You haven't added any addresses yet.</p>
+                            <h2 className="text-lg font-semibold text-app-green mb-2">Nenhum endereço encontrado</h2>
+                            <p className="text-sm text-app-text-light">Você ainda não adicionou nenhum endereço.</p>
                         </div>
                     ) : (
                         <div className="space-y-4">

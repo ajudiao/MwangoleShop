@@ -28,7 +28,7 @@ export function AddressCard({ addr, onEditHandler, setAddresses }: AddressCardPr
                         </p>
                         {addr.isDefault && (<span className="flex-center gap-1 px-2.5 py-0.5 text-[10px] font-semibold bg-app-green text-white rounded-full">
                             <CheckIcon className="size-2.5" />
-                            Default
+                            Padrão
                         </span>
                         )}
                     </div>
