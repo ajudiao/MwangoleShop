@@ -36,9 +36,9 @@ export function Checkout() {
     const total = cartTotal + deliveryFee + tax
 
     const steps: { key: string; label: string; icon: typeof MapPinIcon }[] = [
-        { key: "address", label: "Address", icon: MapPinIcon },
-        { key: "payment", label: "Payment", icon: CreditCardIcon },
-        { key: "review", label: "Review", icon: CheckIcon },
+        { key: "address", label: "Endereço", icon: MapPinIcon },
+        { key: "payment", label: "Pagamento", icon: CreditCardIcon },
+        { key: "review", label: "Revisar", icon: CheckIcon },
     ]
 
     const handlePlaceOrder = async () => {
@@ -68,10 +68,10 @@ export function Checkout() {
         return (
             <div className="min-h-screen bg-app-cream flex-center">
                 <div className="text-center">
-                    <h2 className="text-xl font-semibold text-app-green mb-2">Your cart is empty</h2>
-                    <p className="text-sm text-app-text-light mb-4">Add some products to checkout</p>
+                    <h2 className="text-xl font-semibold text-app-green mb-2">Seu carrinho está vazio</h2>
+                    <p className="text-sm text-app-text-light mb-4">Adicione alguns produtos para finalizar a compra</p>
                     <button onClick={() => navigate('/products')} className="px-5 py-2.5 bg-app-green text-white text-sm font-medium rounded-xl hover:bg-app-green-light transition-colors">
-                        Browse Products
+                        Ver Produtos
                     </button>
                 </div>
             </div>
@@ -86,7 +86,7 @@ export function Checkout() {
                     <ArrowLeft className="size-4" /> Voltar
                 </button>
 
-                <h1 className="text-2xl font-semibold text-app-green mb-8">Checkout</h1>
+                <h1 className="text-2xl font-semibold text-app-green mb-8">Finalizar Compra</h1>
                 {/* Steps */}
                 <div className="flex items-center gap-2 mb-8">
                     {steps.map((st, index) => (
@@ -110,21 +110,21 @@ export function Checkout() {
 
                     {/* Oder sumery sidebar */}
                     <div className="bg-white rounded-2xl p-5 h-fit sticky top-24">
-                        <h3 className="text-sm font-semibold text-app-green mb-4">Order Sumary</h3>
+                        <h3 className="text-sm font-semibold text-app-green mb-4">Resumo do Pedido</h3>
 
                         <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                                <span className="text-app-text-light">Subtotal ({items.length} items)</span>
+                                <span className="text-app-text-light">Subtotal ({items.length} itens)</span>
                                 <span>{currency} {cartTotal.toFixed(2)}</span>
                             </div>
 
                             <div className="flex justify-between">
-                                <span className="text-app-text-light">Delivery</span>
-                                <span>{deliveryFee === 0 ? <span className="text-app-success">Free</span> : `${currency} ${deliveryFee.toFixed(2)}`}</span>
+                                <span className="text-app-text-light">Entrega</span>
+                                <span>{deliveryFee === 0 ? <span className="text-app-success">Grátis</span> : `${currency} ${deliveryFee.toFixed(2)}`}</span>
                             </div>
 
                             <div className="flex justify-between">
-                                <span className="text-app-text-light">Tax</span>
+                                <span className="text-app-text-light">Imposto</span>
                                 <span>{currency} {tax.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between pt-3 border-t border-app-border text-base font-semibold">
