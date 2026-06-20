@@ -15,7 +15,7 @@ export function AppPromoBanner() {
           </p>
           <div className="flex flex-wrap gap-3 justify-center md:justify-start mt-4">
             <button className="px-6 py-3 bg-white text-green-950 font-semibold rounded-xl hover:bg-orange-100">
-              App Staore
+              App Store
             </button>
             <button className="px-6 py-3 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-colors border border-white/20">
               Google Play
@@ -25,7 +25,7 @@ export function AppPromoBanner() {
 
         
       {/* Right side image */}
-      <img src={assets.delivery_truck} alt="Deleivery Truck" className="max-w-60 sm:max-w-120 xl:pr-10"
+      <img src={assets.delivery_truck} alt="Delivery Truck" className="max-w-60 sm:max-w-120 xl:pr-10"
        />    
 
         

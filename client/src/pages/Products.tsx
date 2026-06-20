@@ -89,7 +89,7 @@ export function Products() {
                   onClick={() => setMobileFiltersOpen(true)}
                   className="lg:hidden flex items-center gap-2 px-3 py-2 text-sm bg-white rounded-xl border border-app-border hover:bg-app-cream transition-colors"
                 >
-                  <SlidersHorizontal className="size-4" /> Filter
+                  <SlidersHorizontal className="size-4" /> Filtro
                 </button>
 
                 {/* Sort */}
@@ -99,10 +99,10 @@ export function Products() {
                     onChange={(e) => updateFilter("sort", e.target.value)}
                     className="appearance-none pl-3 pr-8 py-2 text-sm bg-white rounded-xl border border-app-border focus:border-app-green outline-none cursor-pointer"
                   >
-                    <option value="">Newest</option>
-                    <option value="price_asc">Price: Low - High</option>
-                    <option value="price_desc">Price: High - Low</option>
-                    <option value="rating">Top Rated</option>
+                    <option value="">Mais recente</option>
+                    <option value="price_asc">Preço: Menor - Maior</option>
+                    <option value="price_desc">Preço: Maior - Menor</option>
+                    <option value="rating">Mais bem avaliado</option>
                     <option value="name">A - Z</option>
                   </select>
 
@@ -126,7 +126,7 @@ export function Products() {
                   onClick={clearFilters}
                   className="px-5 py-2 text-sm font-medium bg-app-green text-white rounded-xl hover:bg-app-green-light transition-colors"
                 >
-                  Clear Filter
+                  Limpar Filtro
                 </button>
               </div>
             ) : (

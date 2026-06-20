@@ -6,23 +6,25 @@ export function Footer() {
   return (
     <footer className="bg-app-green text-white">
       <div className="max-w-7xl mx-auto px-4 sm-px-6 lg:px-8 py-12">
-        {/* Top */}
+        {/* Topo */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
+          {/* Marca */}
           <div>
             <Link to="/" className="flex items-center gap-2 mb-4">
               <BikeIcon className="size-6 text-white" />
               <span>{footerData.brand.name}</span>
             </Link>
 
-            <p className="text-sm text-white/70 mb-4">{footerData.brand.description}</p>
+            <p className="text-sm text-white/70 mb-4">
+              {footerData.brand.description}
+            </p>
 
             <div className="flex gap-3">
               {footerData.brand.socials.map((social, i) => (
                 <a
                   key={i}
                   href={social.link}
-                  className="size-9 rounded-lg bg-white/10 flex-center hover:bg-white/2"
+                  className="size-9 rounded-lg bg-white/10 flex-center hover:bg-white/20"
                 >
                   <social.icon className="size-4" />
                 </a>
@@ -30,55 +32,74 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Dynamic Sections */}
+          {/* Seções dinâmicas */}
           {footerData.sections.map((section, i) => (
             <div key={i}>
-                <h3 className="text-sm font-semibold uppercase mb-4">
-                    {section.title}
-                </h3>
-                <ul className="space-y-2.5">
-                    {section.links.map((link, i) => (
-                        <li key={i} className="">
-                            {link.to ? (
-                                <Link to={link.to} className="text-sm text-white/70 hover:text-white">
-                                    {link.label}
-                                </Link>
-                            ) : (
-                                <a href={link.href} className="text-sm text-white/70 hover:text-white">{link.label}</a>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-                
+              <h3 className="text-sm font-semibold uppercase mb-4">
+                {section.title}
+              </h3>
+
+              <ul className="space-y-2.5">
+                {section.links.map((link, i) => (
+                  <li key={i}>
+                    {link.to ? (
+                      <Link
+                        to={link.to}
+                        className="text-sm text-white/70 hover:text-white"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-sm text-white/70 hover:text-white"
+                      >
+                        {link.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
 
-          {/* Contact */}
+          {/* Contactos */}
           <div>
-            <h3 className="text-sm font-semibold uppercase mb-4">Contact Us</h3>
+            <h3 className="text-sm font-semibold uppercase mb-4">
+              Contacte-nos
+            </h3>
 
             <ul className="space-y-3">
-            {footerData.contact.map((item, i) => {
-                const Icon = item.icon
+              {footerData.contact.map((item, i) => {
+                const Icon = item.icon;
                 return (
-                    <li key={i} className="flex gap-3 text-sm text-white/70">
-                        <Icon className="size-4 text-white" /> {item.text}
-                    </li>
-                )
-            })}
+                  <li key={i} className="flex gap-3 text-sm text-white/70">
+                    <Icon className="size-4 text-white" />
+                    {item.text}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
 
-        {/* Button */}
+        {/* Rodapé */}
         <div className="border-t border-white/0 mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-white/50">{footerData.bottom.copyright}</p>
+          <p className="text-xs text-white/50">
+            {footerData.bottom.copyright}
+          </p>
 
-            <div>
-                {footerData.bottom.links.map((link, i) => (
-                    <a key={i} href={link.href} className="text-xs text-white/50 hover:text-white/70">{link.label}</a>
-                ))}
-            </div>
+          <div>
+            {footerData.bottom.links.map((link, i) => (
+              <a
+                key={i}
+                href={link.href}
+                className="text-xs text-white/50 hover:text-white/70"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

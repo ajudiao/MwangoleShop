@@ -3,26 +3,27 @@ import type { Product } from "../types";
 import { StarIcon, ThumbsUpIcon } from "lucide-react";
 
 /* ─── Dummy Reviews Section ─── */
+/* ─── Secção de Avaliações (Exemplo) ─── */
 const REVIEWERS = [
-    { name: "Ananya S.", avatar: "AS" },
-    { name: "Rahul M.", avatar: "RM" },
-    { name: "Priya K.", avatar: "PK" },
-    { name: "Vikram J.", avatar: "VJ" },
-    { name: "Meera D.", avatar: "MD" },
-    { name: "Arjun R.", avatar: "AR" },
-    { name: "Sneha T.", avatar: "ST" },
-    { name: "Karan P.", avatar: "KP" },
+    { name: "Ana S.", avatar: "AS" },
+    { name: "Rui M.", avatar: "RM" },
+    { name: "Paula K.", avatar: "PK" },
+    { name: "Vítor J.", avatar: "VJ" },
+    { name: "Marta D.", avatar: "MD" },
+    { name: "André R.", avatar: "AR" },
+    { name: "Sofia T.", avatar: "ST" },
+    { name: "Carlos P.", avatar: "CP" },
 ];
 
 const COMMENTS = [
-    "Absolutely love this product! Fresh and great quality. Will definitely order again.",
-    "Good value for the price. Packaging was neat and delivery was on time.",
-    "Quality is decent but I expected it to be a bit fresher. Still a solid buy overall.",
-    "This has become a staple in my kitchen now. Highly recommended for everyone!",
-    "Exceeded my expectations. The taste and freshness were top-notch. Five stars!",
-    "Pretty good! Not the absolute best I've had, but definitely worth the price.",
-    "Arrived in perfect condition. Very satisfied with the purchase, ordering more soon.",
-    "Great product, my family loved it. The organic quality really shows in the taste.",
+    "Adorei este produto! Muito fresco e de excelente qualidade. Vou comprar novamente.",
+    "Ótima relação qualidade-preço. A embalagem estava bem cuidada e a entrega foi rápida.",
+    "A qualidade é boa, mas esperava que estivesse um pouco mais fresco. Ainda assim, recomendo.",
+    "Já se tornou um produto indispensável na minha cozinha. Recomendo a todos!",
+    "Superou as minhas expectativas. O sabor e a frescura são excelentes. Cinco estrelas!",
+    "Muito bom! Não é o melhor que já experimentei, mas vale bastante a pena pelo preço.",
+    "Chegou em perfeitas condições. Fiquei muito satisfeito com a compra e vou encomendar mais.",
+    "Excelente produto, toda a família adorou. A qualidade dos ingredientes faz realmente a diferença.",
 ];
 
 function seededRandom(seed: string) {
@@ -44,7 +45,7 @@ export default function DummyReviewsSection({ product }: { product: Product }) {
                 id: i,
                 ...r,
                 rating,
-                date: d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
+                date: d.toLocaleDateString("pt-BR", { day: "numeric", month: "short", year: "numeric" }),
                 comment: COMMENTS[(Math.floor(rng() * COMMENTS.length) + i) % COMMENTS.length],
                 helpful: Math.floor(rng() * 20) + 1,
             };

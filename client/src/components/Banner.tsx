@@ -19,13 +19,12 @@ export function Banner() {
             <div className="flex-center gap-2">
               <TruckIcon className="size-4 shrink-0" />
               <span className="font-medium">
-                Lorem ipsum dolor sit amet consectetur, desconto de 20% elit.
-              </span>
+                Grandes descontos em produtos selecionados. Poupe até 25%!</span>
             </div>
             <span className="hidden sm:inline text-white/40"> | </span>
             <div className="hidden sm:flex items-center gap-2">
-                <ZapIcon className="size-3.5 fill-yellow-400 text-yellow-400 shrink-0" />
-                <span className="">Promocao do mes na MwangoleShop</span>
+              <ZapIcon className="size-3.5 fill-yellow-400 text-yellow-400 shrink-0" />
+              <span>  Ofertas exclusivas da MwangoleShop por tempo limitado.</span>
             </div>
           </div>
 

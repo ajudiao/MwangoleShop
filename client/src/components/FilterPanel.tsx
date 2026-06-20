@@ -3,7 +3,7 @@
 
 export function FilterPanel({categories, category, organic, minPrice, maxPrice, updateFilter, clearFilter, hasFilter}) {
 
-    const categoriesWithAll = [{slug: "", name: "All categories"}, ...categories]
+    const categoriesWithAll = [{slug: "", name: "Todas as categorias"}, ...categories]
 
     return (
         <div className="space-y-6">
@@ -24,15 +24,15 @@ export function FilterPanel({categories, category, organic, minPrice, maxPrice, 
             {/* Price Range */}
             <div>
                 <h3 className="text-sm font-semibold text-app-green mb-3">
-                    Price Range
+                    Faixa de Preço
                 </h3>
 
                 <div className="flex items-center gap-2">
-                    <input type="number" placeholder="Min" value={minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} className="w-full px-3 py-2 text-sm bg-white rounded-lg border not-focus:border-app-border" />
+                    <input type="number" placeholder="Mín" value={minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} className="w-full px-3 py-2 text-sm bg-white rounded-lg border not-focus:border-app-border" />
 
                     <span className="text-app-text-light">-</span>
 
-                     <input type="number" placeholder="Max" value={maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} className="w-full px-3 py-2 text-sm bg-white rounded-lg border not-focus:border-app-border" />
+                     <input type="number" placeholder="Máx" value={maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} className="w-full px-3 py-2 text-sm bg-white rounded-lg border not-focus:border-app-border" />
                 </div>
             </div>
 

@@ -19,40 +19,41 @@ export const assets = {
 };
 
 export const categoriesData = [
-    { slug: "fruits-vegetables", name: "Fruits & Vegetables", image: fruits_vegetables },
-    { slug: "personal-care", name: "Personal Care", image: personal_care },
-    { slug: "pantry-staples", name: "Pantry Staples", image: pantry_staples },
-    { slug: "bakery", name: "Bakery", image: bakery },
-    { slug: "beverages", name: "Beverages", image: drinks },
-    { slug: "meat-seafood", name: "Meat & Seafood", image: meat_seafood },
-    { slug: "snacks", name: "Snacks", image: snacks },
-    { slug: "frozen-foods", name: "Frozen Foods", image: frozen_foods },
-    { slug: "baby-care", name: "Baby Care", image: baby_care },
-    { slug: "dairy-eggs", name: "Dairy & Eggs", image: dairy_eggs },
+    { slug: "fruits-vegetables", name: "Frutas e Vegetais", image: fruits_vegetables },
+    { slug: "personal-care", name: "Cuidados Pessoais", image: personal_care },
+    { slug: "pantry-staples", name: "Alimentos Básicos", image: pantry_staples },
+    { slug: "bakery", name: "Padaria", image: bakery },
+    { slug: "beverages", name: "Bebidas", image: drinks },
+    { slug: "meat-seafood", name: "Carne e Frutos do Mar", image: meat_seafood },
+    { slug: "snacks", name: "Lanches", image: snacks },
+    { slug: "frozen-foods", name: "Alimentos Congelados", image: frozen_foods },
+    { slug: "baby-care", name: "Cuidados do Bebé", image: baby_care },
+    { slug: "dairy-eggs", name: "Laticínios e Ovos", image: dairy_eggs },
 ];
 
 export const heroSectionData = {
-    description: "Fresh, organic groceries delivered from local farms to your doorstep. Quality you can taste, convenience you deserve.",
+    description: "Alimentos frescos e orgânicos entregues diretamente das quintas locais até à sua porta. Qualidade que você pode saborear, conveniência que você merece.",
     hero_image: hero_bg,
     hero_features: [
-        { icon: TruckIcon, title: "Free Delivery", desc: "Orders over $20" },
-        { icon: LeafIcon, title: "100% Organic", desc: "Certified products" },
-        { icon: ClockIcon, title: "Same Day", desc: "Express delivery" },
-        { icon: ShieldCheckIcon, title: "Secure Pay", desc: "Safe checkout" },
+        { icon: TruckIcon, title: "Entrega Grátis", desc: "Pedidos acima de $20" },
+        { icon: LeafIcon, title: "100% Orgânico", desc: "Produtos certificados" },
+        { icon: ClockIcon, title: "Mesmo Dia", desc: "Entrega expressa" },
+        { icon: ShieldCheckIcon, title: "Pagamento Seguro", desc: "Checkout seguro" },
     ],
 };
 
 export const deliveryPartnerLoginImage = "https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200";
 
 export const appPromoBannerData = {
-    title: "Get fresh groceries in minutes",
-    description: "Download the Instacart app for exclusive deals, real-time tracking, and the freshest selection delivered right to your door.",
+    title: "Obtenha alimentos frescos em minutos",
+    description: "Baixe o aplicativo MwangoleShop para ofertas exclusivas, rastreamento em tempo real e a seleção mais fresca entregue direto na sua porta.",
 };
 
 export const footerData = {
     brand: {
         name: "Instacart",
-        description: "Bringing fresh, organic groceries straight from local farms to your doorstep. Nourish your home with Earth's finest.",
+        description:
+            "Levamos produtos frescos e orgânicos diretamente das quintas locais até à sua porta. Alimente a sua casa com o melhor que a natureza oferece.",
         socials: [
             { icon: SiFacebook, link: "#" },
             { icon: SiX, link: "#" },
@@ -62,36 +63,36 @@ export const footerData = {
 
     sections: [
         {
-            title: "Quick Links",
+            title: "Links Rápidos",
             links: [
-                { label: "All Products", to: "/products" },
-                { label: "Flash Deals", to: "/deals" },
-                { label: "Track Order", to: "/orders" },
-                { label: "Delivery Partner", to: "/delivery" },
+                { label: "Todos os Produtos", to: "/products" },
+                { label: "Ofertas Relâmpago", to: "/deals" },
+                { label: "Acompanhar Pedido", to: "/orders" },
+                { label: "Seja um Entregador", to: "/delivery" },
             ],
         },
         {
-            title: "Customer Service",
+            title: "Atendimento ao Cliente",
             links: [
-                { label: "My Account", to: "#" },
-                { label: "Order History", to: "#" },
-                { label: "Addresses", to: "#" },
-                { label: "Help Center", href: "#" },
+                { label: "Minha Conta", to: "#" },
+                { label: "Histórico de Pedidos", to: "#" },
+                { label: "Meus Endereços", to: "#" },
+                { label: "Centro de Ajuda", href: "#" },
             ],
         },
     ],
 
     contact: [
-        { icon: MapPinIcon, text: "Angola, Luanda" },
+        { icon: MapPinIcon, text: "Luanda, Angola" },
         { icon: PhoneIcon, text: "+244 944 921 970" },
         { icon: MailIcon, text: "andrejudiao@gmail.com" },
     ],
 
     bottom: {
-        copyright: "© 2026 Greatstack. All rights reserved.",
+        copyright: "© 2026 Greatstack. Todos os direitos reservados.",
         links: [
-            { label: "Privacy Policy", href: "#" },
-            { label: "Terms of Service", href: "#" },
+            { label: "Política de Privacidade", href: "#" },
+            { label: "Termos de Serviço", href: "#" },
         ],
     },
 };
@@ -114,7 +115,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b3b",
         name: "Butter Croissant 100g",
-        description: "Flaky and buttery",
+        description: "Macio e amanteigado",
         price: 45,
         originalPrice: 50,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/zvoeqbvrbrt7atqj0dbu.png",
@@ -133,7 +134,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b37",
         name: "Organic Quinoa 500g",
-        description: "High protein, Gluten-free",
+        description: "Alto em proteínas, Sem glúten",
         price: 420,
         originalPrice: 450,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/cxrrgnf12xuhkr4dyhi2.png",
@@ -152,7 +153,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b3a",
         name: "Brown Bread 400g",
-        description: "Soft and healthy, Ideal for breakfast",
+        description: "Macio e saudável, Ideal para café da manhã",
         price: 35,
         originalPrice: 40,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/vy1xa7zovcu22smzapzv.png",
@@ -171,7 +172,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b36",
         name: "Barley 1kg",
-        description: "Rich in fiber, Helps digestion",
+        description: "Rico em fibra, Ajuda na digestão",
         price: 140,
         originalPrice: 150,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/spb5sgy8g24rned9nwog.png",
@@ -190,7 +191,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b39",
         name: "Knorr Cup Soup 70g",
-        description: "Convenient and tasty",
+        description: "Prático e saboroso",
         price: 30,
         originalPrice: 35,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/vnzb2qbwtpab5gnqvx0f.png",
@@ -209,7 +210,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b38",
         name: "Maggi Noodles 280g",
-        description: "Instant and easy to cook",
+        description: "Instantâneo e fácil de cozinhar",
         price: 50,
         originalPrice: 55,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/dsep7owmwvfrukzbslqo.png",
@@ -228,7 +229,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b30",
         name: "Sprite 1.5L",
-        description: "Chilled and refreshing, Perfect for celebrations",
+        description: "Gelado e refrescante, Perfeito para celebrações",
         price: 60,
         originalPrice: 75,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/daiglpvgna1dlhjplbve.png",
@@ -247,7 +248,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b23",
         name: "Carrot 500g",
-        description: "Sweet and crunchy, Good for eyesight, Ideal for juices and salads",
+        description: "Doce e crocante, Bom para a visão, Ideal para sucos e saladas",
         price: 44,
         originalPrice: 50,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/ceqgisupuizyste9aifg.png",
@@ -266,7 +267,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b2f",
         name: "Coca-Cola 1.5L",
-        description: "Perfect for parties and gatherings, Best served chilled",
+        description: "Perfeito para festas e reuniões, Melhor servido gelado",
         price: 75,
         originalPrice: 80,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/eljxcdud6fduwfim5rdx.png",
@@ -285,7 +286,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b35",
         name: "Brown Rice 1kg",
-        description: "Whole grain and nutritious",
+        description: "Grão inteiro e nutricional",
         price: 110,
         originalPrice: 120,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/dboutcrkdjhoxcvbbqne.png",
@@ -304,7 +305,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b2d",
         name: "Eggs 12 pcs",
-        description: "Farm fresh, Rich in protein, Ideal for breakfast and baking",
+        description: "Da quinta, Rico em proteínas, Ideal para café da manhã e cozimento",
         price: 85,
         originalPrice: 90,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/cnjrpbcnqesqxy1wr30g.png",
@@ -323,7 +324,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b28",
         name: "Banana 1 kg",
-        description: "Sweet and ripe, High in potassium, Great for smoothies and snacking",
+        description: "Doce e maduro, Alto em potássio, Ótimo para smoothies e petiscos",
         price: 45,
         originalPrice: 50,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/dsnmko6gqtyw31okby80.png",
@@ -342,7 +343,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b33",
         name: "Basmati Rice 5kg",
-        description: "Long grain and aromatic, Perfect for biryani",
+        description: "Grão comprido e aromático, Perfeito para biryani",
         price: 520,
         originalPrice: 550,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/evuovl2nlwdjukosfz23.png",
@@ -361,7 +362,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b25",
         name: "Onion 500g",
-        description: "Fresh and pungent, Perfect for cooking, A kitchen staple",
+        description: "Fresco e pungente, Perfeito para cozinhar, Um alimento básico da cozinha",
         price: 45,
         originalPrice: 50,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/wnvtwlm2tphqburhsmyc.png",
@@ -380,7 +381,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b31",
         name: "7 Up 1.5L",
-        description: "Refreshing lemon-lime flavor",
+        description: "Sabor refrescante de limão e lima",
         price: 70,
         originalPrice: 76,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/qt1ypzsoqni12ghf2ryp.png",
@@ -399,7 +400,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b24",
         name: "Spinach 500g",
-        description: "Rich in iron, High in vitamins, Perfect for soups and salads",
+        description: "Rico em ferro, Alto em vitaminas, Perfeito para sopas e saladas",
         price: 15,
         originalPrice: 18,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/bhrtl76sscvmeiq4kchm.png",
@@ -418,7 +419,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b27",
         name: "Orange 1 kg",
-        description: "Juicy and sweet, Rich in Vitamin C, Perfect for juices and salads",
+        description: "Suculento e doce, Rico em Vitamina C, Perfeito para sucos e saladas",
         price: 75,
         originalPrice: 80,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/r1wxfortw5h12g7egx7k.png",
@@ -437,7 +438,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b34",
         name: "Wheat Flour 5kg",
-        description: "Soft and fluffy rotis, Rich in nutrients",
+        description: "Rotis macio e fofo, Rico em nutrientes",
         price: 230,
         originalPrice: 250,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/ooitbkcjcky0gkjmkatb.png",
@@ -456,7 +457,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b2a",
         name: "Grapes 500g",
-        description: "Fresh and juicy, Rich in antioxidants, Perfect for snacking and fruit salads",
+        description: "Fresco e suculento, Rico em antioxidantes, Perfeito para petiscos e saladas de frutas",
         price: 65,
         originalPrice: 70,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/jsmb7caaokhnyci2coga.png",
@@ -475,7 +476,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b32",
         name: "Fanta 1.5L",
-        description: "Sweet and fizzy",
+        description: "Doce e espumante",
         price: 65,
         originalPrice: 70,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/nexecd3mgyzrpeun1bee.png",
@@ -494,7 +495,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b2c",
         name: "Paneer 200g",
-        description: "Soft and fresh, Rich in protein, Ideal for curries and snacks",
+        description: "Macio e fresco, Rico em proteínas, Ideal para curós e petiscos",
         price: 85,
         originalPrice: 90,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/vihqr6wquv57byurvz46.png",
@@ -513,7 +514,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b29",
         name: "Mango 1 kg",
-        description: "Sweet and flavorful, Perfect for smoothies and desserts, Rich in Vitamin A",
+        description: "Doce e saboroso, Perfeito para smoothies e sobremesas, Rico em Vitamina A",
         price: 140,
         originalPrice: 150,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/nb1mpxuo4fdcik6ey5yj.png",
@@ -532,7 +533,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b22",
         name: "Tomato 1 kg",
-        description: "Juicy and ripe, Rich in Vitamin C, Perfect for salads and sauces, Farm fresh quality",
+        description: "Suculento e maduro, Rico em Vitamina C, Perfeito para saladas e molhos, Qualidade da quinta",
         price: 28,
         originalPrice: 30,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/kdbfytxisrjymgy0ubhk.png",
@@ -551,7 +552,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b21",
         name: "Potato 500g",
-        description: "Fresh and organic, Rich in carbohydrates, Ideal for curries and fries",
+        description: "Fresco e orgânico, Rico em carboidratos, Ideal para curós e batatas fritas",
         price: 35,
         originalPrice: 40,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/tzibj2ntsnbn4e0u5kwv.png",
@@ -570,7 +571,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b2e",
         name: "Cheese 200g",
-        description: "Creamy and delicious, Perfect for pizzas and sandwiches, Rich in calcium",
+        description: "Cremoso e delicioso, Perfeito para pizzas e sançadas, Rico em cálcio",
         price: 130,
         originalPrice: 140,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/gek3mmiig3lixlkpxks8.png",
@@ -589,7 +590,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b2b",
         name: "Amul Milk 1L",
-        description: "Fresh milk, Rich in calcium",
+        description: "Leite fresco, Rico em cálcio",
         price: 55,
         originalPrice: 60,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/ooamzy497lhsj2gjuwby.png",
@@ -608,7 +609,7 @@ export const dummyProducts = [
     {
         _id: "69c22613ae75a98c7cd13b26",
         name: "Apple 1 kg",
-        description: "Boosts immunity, Rich in fiber",
+        description: "Aumenta a imunidade, Rico em fibra",
         price: 90,
         originalPrice: 100,
         image: "https://raw.githubusercontent.com/avinashdm/gs-images/main/greencart/pjt1y6xdo46tluemhf0o.png",

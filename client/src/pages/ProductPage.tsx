@@ -7,6 +7,7 @@ import { Loading } from "../components/Loading";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  CheckIcon,
   HomeIcon,
   LeafIcon,
   MinusIcon,
@@ -113,12 +114,12 @@ export function ProductPage() {
                 {product.isOrganic && (
                   <span className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-app-green text-white rounded-full">
                     <LeafIcon className="w-3 h-3" />
-                    Organic
+                    Orgânico
                   </span>
                 )}
                 {product.discount > 0 && (
                   <span className="px-2.5 py-1 text-xs font-semibold bg-app-orange text-white rounded-full">
-                    {product.discount}% OFF
+                    {product.discount}% DESC
                   </span>
                 )}
               </div>
@@ -148,7 +149,7 @@ export function ProductPage() {
                     {product.rating}
                   </span>
                   <span className="text-sm text-app-text-light">
-                    ({product.reviewCount} views)
+                    ({product.reviewCount} avaliações)
                   </span>
                 </div>
               )}
@@ -174,15 +175,16 @@ export function ProductPage() {
               {/* Stock */}
               <div className="mb-6">
                 {product.stock > 0 ? (
-                  <span className="text-sm text-app-success">
-                    v In Stock ({product.stock}) available{" "}
+                  <span className="text-sm text-app-success flex items-center gap-1">
+                    <CheckIcon className="w-4 h-4" />
+                    Disponível em stock ({product.stock} unidades)
                   </span>
                 ) : (
-                  <span className="text-sm text-app-error">Out of Stok</span>
+                  <span className="text-sm text-app-error">Fora de Estoque</span>
                 )}
               </div>
 
-              {/* Ountity + Add to cart */}
+              {/* Quantity + Add to cart */}
               <div className="flex items-center gap-3">
                 {/* Quantity */}
                 <div className="flex items-center border border-app-border rounded-xl overflow-hidden">
@@ -213,14 +215,14 @@ export function ProductPage() {
                   className={`flex-1 py-3 font-semibold rounded-xl transition-colors flex-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] ${inCart ? "bg-app-cream text-app-green border border-app-green" : "bg-app-orange text-white hov er:bg-app-orange-dark"}`}
                 >
                   <ShoppingCartIcon className="w-4 h-4" />
-                  {inCart ? "Added to Cart" : " Add to Cart "}
+                  {inCart ? "Adicionado ao Carrinho" : "Adicionar ao Carrinho"}
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Customar Reviews */}
+        {/* Customer Reviews */}
         {product.reviewCount > 0 && <DummyReviewsSection product={product} />}
 
         {/* Related Products */}
@@ -229,10 +231,10 @@ export function ProductPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-semibold text-app-green">
-                  Related Products
+                  Produtos Relacionados
                 </h2>
                 <p className="text-sm text-app-text-light mt-1">
-                  More from {categoryLabel}
+                  Mais de {categoryLabel}
                 </p>
               </div>
               <Link

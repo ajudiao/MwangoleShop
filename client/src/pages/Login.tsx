@@ -73,7 +73,7 @@ export function Login() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLoginState && (
               <label className="text-sm flex flex-col gap-1">
-                Name
+                Nome
                 <div className="relative">
                   <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-app-text-light" />
                   <input
