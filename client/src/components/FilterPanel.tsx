@@ -1,7 +1,17 @@
 
 
 
-export function FilterPanel({categories, category, organic, minPrice, maxPrice, updateFilter, clearFilter, hasFilter}) {
+interface FilterPanelProps {
+    categories: any;
+    category: any;
+    minPrice: any;
+    maxPrice: any;
+    updateFilter: any;
+    clearFilter?: () => void;
+    hasFilter: any;
+}
+
+export function FilterPanel({categories, category, minPrice, maxPrice, updateFilter, clearFilter, hasFilter}: FilterPanelProps) {
 
     const categoriesWithAll = [{slug: "", name: "Todas as categorias"}, ...categories]
 

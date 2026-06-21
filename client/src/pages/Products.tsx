@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { Product } from "../types";
 import { Link, useSearchParams } from "react-router-dom";
 import { categoriesData, dummyProducts } from "../assets/assets";
-import { Home } from "./Home";
 import { ChevronDown, HomeIcon, SlidersHorizontal, XIcon } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
 import { Loading } from "../components/Loading";
@@ -11,7 +10,7 @@ import { FilterPanel } from "../components/FilterPanel";
 export function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
-  const [totalPage, setTotalPage] = useState(1);
+  const [totalPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -66,7 +65,7 @@ export function Products() {
           {/* Sidebar - Desktop */}
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="bg-white rounded-2xl p-4 sticky top-24">
-              <FilterPanel  categories={categoriesData} category={category} organic={organic} minPrice={minPrice} maxPrice={maxPrice} updateFilter={updateFilter} hasFilter={hasFilters} />
+              <FilterPanel  categories={categoriesData} category={category} minPrice={minPrice} maxPrice={maxPrice} updateFilter={updateFilter} clearFilter={clearFilters} hasFilter={hasFilters} />
             </div>
           </aside>
 
@@ -173,7 +172,7 @@ export function Products() {
               </div>
 
               <div className="p-4">
-                 <FilterPanel  categories={categoriesData} category={category} organic={organic} minPrice={minPrice} maxPrice={maxPrice} updateFilter={updateFilter} hasFilter={hasFilters} />
+                 <FilterPanel  categories={categoriesData} category={category} minPrice={minPrice} maxPrice={maxPrice} updateFilter={updateFilter} clearFilter={clearFilters} hasFilter={hasFilters} />
               </div>
 
             </div>

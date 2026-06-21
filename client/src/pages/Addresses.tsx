@@ -94,7 +94,7 @@ export function Addresses() {
                     ) : (
                         <div className="space-y-4">
                             {addresses.map((address) => (
-                                <AddressCard key={address._id} addr={address} onEditHandler={onEditHandler} setAddresses={setAddresses} />
+                                <AddressCard key={address._id} addr={address} onEditHandler={onEditHandler} />
                             ))}
                         </div>
                     )

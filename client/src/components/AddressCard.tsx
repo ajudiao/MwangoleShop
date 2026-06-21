@@ -1,14 +1,12 @@
-import type { Address } from "cluster";
+import type { Address } from "../types";
 import { CheckIcon, MapPinIcon, PencilIcon, Trash2Icon } from "lucide-react";
-
 
 interface AddressCardProps {
     addr: Address;
     onEditHandler: (address: Address) => void;
-    setAddresses: (addresses: Address[]) => void;
 }
 
-export function AddressCard({ addr, onEditHandler, setAddresses }: AddressCardProps) {
+export function AddressCard({ addr, onEditHandler }: AddressCardProps) {
 
     const onDeleteHandler = async (id: string) => {
         console.log(id)
