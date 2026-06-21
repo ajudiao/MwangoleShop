@@ -19,7 +19,7 @@ import DummyReviewsSection from "../assets/DummyReviewsSection";
 import { ProductCard } from "../components/ProductCard";
 
 export function ProductPage() {
-  const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+  const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
   const { id } = useParams();
   const navigate = useNavigate();

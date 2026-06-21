@@ -10,7 +10,7 @@ import CheckoutReview from "../components/Checkout/CheckoutReview";
 
 export function Checkout() {
     const navigate = useNavigate()
-    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
     const { items, cartTotal } = useCart()
     const { user } = { user: { addresses: dummyAddressData } }
