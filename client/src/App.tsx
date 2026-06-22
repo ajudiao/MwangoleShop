@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Router, Routes } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { AppLayout } from "./pages/AppLayout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -12,6 +12,12 @@ import { SearchResult } from "./pages/SearchResult";
 import { FlashDeals } from "./pages/FlashDeals";
 import { Addresses } from "./pages/Addresses";
 import { Toaster } from "react-hot-toast";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminProductForm from "./pages/admin/AdminProductForm";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminDeliveryPartners from "./pages/admin/AdminDeliveryPartners";
 
 export function App() {
   return (
@@ -48,6 +54,18 @@ export function App() {
             <Route path="addresses" element={<Addresses />} />
           </Route>
         </Route>
+
+        {/* Admin Pages */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="products/new" element={<AdminProductForm />} />
+          <Route path="products/:id/edit" element={<AdminProductForm />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="dlivery-partners" element={<AdminDeliveryPartners />} />
+        </Route>
+
+        
       </Routes>
     </>
   );

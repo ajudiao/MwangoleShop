@@ -56,7 +56,7 @@ export function Products() {
           </Link>
 
           <span>/</span>
-          <span className="">
+          <span className="text-app-green font-medium">
             {activeCategory ? activeCategory.name : "Todos os produtos"}
           </span>
         </nav>
