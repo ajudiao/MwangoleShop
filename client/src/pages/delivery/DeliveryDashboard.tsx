@@ -3,9 +3,9 @@ import { PackageIcon, NavigationIcon } from "lucide-react";
 import OtpModal from "../../components/Delivery/OtpModal";
 import CancelModal from "../../components/Delivery/CancelModal";
 import DeliveryOrderCard from "../../components/Delivery/DeliveryOrderCard";
-import Loading from "../../components/Loading";
 import type { Order } from "../../types";
 import { dummyDashboardOrdersData } from "../../assets/assets";
+import { Loading } from "../../components/Loading";
 
 export default function DeliveryDashboard() {
 
@@ -63,13 +63,13 @@ export default function DeliveryDashboard() {
             <div className="flex items-center gap-2 flex-wrap">
                 {(["active", "completed"] as const).map((t) => (
                     <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${tab === t ? "bg-app-green text-white" : "bg-white text-zinc-600 hover:bg-app-cream border border-app-border"}`}>
-                        {t === "active" ? "Active" : "Completed"}
+                        {t === "active" ? "Ativas" : "Concluídas"}
                     </button>
                 ))}
                 <div className="ml-auto">
                     <button onClick={() => setTracking((prev) => !prev)} className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors flex items-center gap-1.5 ${tracking ? "bg-green-600 text-white" : "bg-white text-zinc-600 border border-app-border hover:bg-app-cream"}`}>
                         <NavigationIcon className={`w-3.5 h-3.5 ${tracking ? "animate-pulse" : ""}`} />
-                        {tracking ? "Sharing Location" : "Share Location"}
+                        {tracking ? "Compartilhando Localização" : "Compartilhar Localização"}
                     </button>
                 </div>
             </div>
@@ -80,8 +80,8 @@ export default function DeliveryDashboard() {
             ) : orders.length === 0 ? (
                 <div className="text-center py-16 bg-white rounded-2xl border border-app-border">
                     <PackageIcon className="size-12 text-app-border mx-auto mb-3" />
-                    <p className="text-lg font-semibold text-zinc-900 mb-1">No {tab} deliveries</p>
-                    <p className="text-sm text-zinc-500">{tab === "active" ? "You'll see new assignments here" : "Completed deliveries will appear here"}</p>
+                    <p className="text-lg font-semibold text-zinc-900 mb-1">{tab === "active" ? "Nenhuma entrega ativa" : "Nenhuma entrega concluída"}</p>
+                    <p className="text-sm text-zinc-500">{tab === "active" ? "Você verá novas atribuições aqui" : "Entregas concluídas aparecerão aqui"}</p>
                 </div>
             ) : (
                 <div className="space-y-4">

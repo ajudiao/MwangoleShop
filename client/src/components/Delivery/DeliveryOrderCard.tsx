@@ -14,7 +14,24 @@ export default function DeliveryOrderCard({ order, tab, handleUpdateStatus, setO
 
     const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
 
-    const user = typeof order.user === "object" ? order.user : { name: "Customer", email: "", phone: "" };
+    const user = typeof order.user === "object" ? order.user : { name: "Cliente", email: "", phone: "" };
+    const statusLabels: any = {
+        Placed: "Realizado",
+        Confirmed: "Confirmado",
+        Assigned: "Atribuído",
+        Packed: "Empacotado",
+        "Out for Delivery": "Em Entrega",
+        Delivered: "Entregue",
+        Cancelled: "Cancelado",
+    };
+    const paymentMethodLabels: any = {
+        cash: "Dinheiro",
+        card: "Cartão",
+    };
+    const addressLabelMap: any = {
+        Home: "Casa",
+        Work: "Trabalho",
+    };
 
     return (
         <div key={order._id} className="bg-white rounded-2xl border border-app-border overflow-hidden">
@@ -22,8 +39,8 @@ export default function DeliveryOrderCard({ order, tab, handleUpdateStatus, setO
             <div className="px-5 py-4 border-b border-app-border flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <span className="text-sm font-mono text-zinc-500">#{order._id.slice(-6).toUpperCase()}</span>
-                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${statusColors[order.status] || "bg-zinc-100 text-zinc-600"}`}>
-                        {order.status}
+                        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${statusColors[order.status] || "bg-zinc-100 text-zinc-600"}`}>
+                        {statusLabels[order.status] || order.status}
                     </span>
                 </div>
                 <span className="text-sm font-semibold text-zinc-900">{currency}{order.total.toFixed(2)}</span>
@@ -45,11 +62,11 @@ export default function DeliveryOrderCard({ order, tab, handleUpdateStatus, setO
                 {/* Address */}
                 <div className="flex items-start gap-2 text-sm text-zinc-600">
                     <MapPinIcon className="size-4 text-app-green shrink-0 mt-0.5" />
-                    <p>{order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zip}</p>
+                    <p>{addressLabelMap[order.shippingAddress.label] ? `${addressLabelMap[order.shippingAddress.label]} • ` : ""}{order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zip}</p>
                 </div>
 
                 {/* Items count */}
-                <p className="text-xs text-zinc-500">{order.items.length} item{order.items.length > 1 ? "s" : ""} • {order.paymentMethod.toUpperCase()}</p>
+                <p className="text-xs text-zinc-500">{order.items.length} {order.items.length > 1 ? "itens" : "item"} • {paymentMethodLabels[order.paymentMethod] || order.paymentMethod.toUpperCase()}</p>
             </div>
 
             {/* Actions */}
@@ -78,7 +95,7 @@ export default function DeliveryOrderCard({ order, tab, handleUpdateStatus, setO
                 <div className="px-5 py-3 border-t border-app-border">
                     <p className="text-xs text-zinc-500 flex items-center gap-1">
                         <ClockIcon className="size-3" />
-                        {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        {new Date(order.createdAt).toLocaleDateString("pt-BR", { month: "short", day: "numeric", year: "numeric" })}
                     </p>
                 </div>
             )}

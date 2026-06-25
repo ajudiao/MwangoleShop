@@ -6,12 +6,12 @@ import { NavBar } from "../../components/Navbar";
 export default function AdminLayout() {
 
     const AdminLinkData = [
-        { to: "/admin", label: "Dashboard", icon: BarChart3Icon },
-        { to: "/admin/products/new", label: "Add Product", icon: PlusIcon },
-        { to: "/admin/products", label: "Products", icon: PackageSearchIcon },
-        { to: "/admin/orders", label: "Orders", icon: ShoppingBagIcon },
-        { to: "/admin/delivery-partners", label: "Delivery Partners", icon: Truck },
-        { to: "/", label: "Exit", icon: LogOutIcon },
+        { to: "/admin", label: "Painel", icon: BarChart3Icon },
+        { to: "/admin/products/new", label: "Adicionar Produto", icon: PlusIcon },
+        { to: "/admin/products", label: "Produtos", icon: PackageSearchIcon },
+        { to: "/admin/orders", label: "Pedidos", icon: ShoppingBagIcon },
+        { to: "/admin/delivery-partners", label: "Parceiros de Entrega", icon: Truck },
+        { to: "/", label: "Sair", icon: LogOutIcon },
     ]
 
     return (
@@ -24,7 +24,7 @@ export default function AdminLayout() {
                 <aside className="w-full lg:w-64 shrink-0 h-fit bg-white rounded-2xl p-4 border border-app-border">
                     <div className="pb-4 mb-4 border-b border-app-border">
                         <h2 className="text-lg font-semibold text-app-green flex items-center gap-2 px-2">
-                            <ShieldIcon className="size-5 text-green-900" /> Admin Panel
+                            <ShieldIcon className="size-5 text-green-900" /> Painel Admin
                         </h2>
                     </div>
                     <nav className="flex flex-col gap-1.5">

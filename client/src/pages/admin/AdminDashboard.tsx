@@ -28,10 +28,10 @@ export default function AdminDashboard() {
 
     const cards = stats
         ? [
-            { label: "Total Orders", value: stats.totalOrders, icon: ShoppingBagIcon },
-            { label: "Total Users", value: stats.totalUsers, icon: UsersIcon },
-            { label: "Total Products", value: stats.totalProducts, icon: PackageIcon },
-            { label: "Out of Stock", value: stats.outOfStock, icon: AlertTriangleIcon },
+            { label: "Total de Pedidos", value: stats.totalOrders, icon: ShoppingBagIcon },
+            { label: "Total de Usuários", value: stats.totalUsers, icon: UsersIcon },
+            { label: "Total de Produtos", value: stats.totalProducts, icon: PackageIcon },
+            { label: "Fora de Estoque", value: stats.outOfStock, icon: AlertTriangleIcon },
         ]
         : [];
 
@@ -57,27 +57,27 @@ export default function AdminDashboard() {
             {/* Recent Orders */}
             <div className="bg-white rounded-2xl border border-app-border overflow-hidden">
                 <div className="px-6 py-5 border-b border-app-border flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-zinc-900">Recent Orders</h2>
+                    <h2 className="text-lg font-semibold text-zinc-900">Pedidos Recentes</h2>
                     <Link to="/admin/orders" className="text-sm font-medium text-app-orange hover:text-app-orange-dark transition-colors">
-                        View All →
+                        Ver Todos →
                     </Link>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm whitespace-nowrap">
                         <thead className="bg-app-cream/50 text-zinc-500 uppercase text-xs font-semibold">
                             <tr>
-                                <th className="px-6 py-3">Order ID</th>
-                                <th className="px-6 py-3">Customer</th>
-                                <th className="px-6 py-3">Items</th>
+                                <th className="px-6 py-3">ID do Pedido</th>
+                                <th className="px-6 py-3">Cliente</th>
+                                <th className="px-6 py-3">Itens</th>
                                 <th className="px-6 py-3">Total</th>
                                 <th className="px-6 py-3">Status</th>
-                                <th className="px-6 py-3">Date</th>
+                                <th className="px-6 py-3">Data</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-app-border">
                             {stats?.recentOrders.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-8 text-center text-zinc-500">No orders yet.</td>
+                                    <td colSpan={6} className="px-6 py-8 text-center text-zinc-500">Ainda não há pedidos.</td>
                                 </tr>
                             ) : (
                                 stats?.recentOrders.map((order: any) => (
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
                                             <p className="font-medium text-zinc-900">{order.user?.name || "—"}</p>
                                             <p className="text-xs text-zinc-500">{order.user?.email || ""}</p>
                                         </td>
-                                        <td className="px-6 py-4 text-zinc-600">{order.items?.length || 0} items</td>
+                                        <td className="px-6 py-4 text-zinc-600">{order.items?.length || 0} itens</td>
                                         <td className="px-6 py-4 font-medium">{currency}{order.total?.toFixed(2)}</td>
                                         <td className="px-6 py-4">
                                             <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${statusColors[order.status] || "bg-zinc-100 text-zinc-600"}`}>

@@ -47,7 +47,7 @@ export default function AdminProductForm() {
                     <Link to="/admin/products" className="p-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-500 rounded-lg transition-colors">
                         <ArrowLeftIcon className="size-5" />
                     </Link>
-                    <h2 className="text-xl font-semibold text-zinc-900">{isEdit ? "Edit Product" : "New Product"}</h2>
+                    <h2 className="text-xl font-semibold text-zinc-900">{isEdit ? "Editar Produto" : "Novo Produto"}</h2>
                 </div>
                 {loading ? (
                     <Loading />
@@ -55,34 +55,34 @@ export default function AdminProductForm() {
                     <form onSubmit={handleSubmit} className="p-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Name</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Nome</label>
                                 <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Category</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Categoria</label>
                                 <select required value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all bg-white">
-                                    <option value="">Select a category</option>
+                                    <option value="">Selecione uma categoria</option>
                                     {categoriesData.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)}
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Price ($)</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Preço</label>
                                 <input required type="number" step="0.01" min="0" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Original Price ($) - Optional</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Preço Original - Opcional</label>
                                 <input type="number" step="0.01" min="0" value={formData.originalPrice} onChange={e => setFormData({ ...formData, originalPrice: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Unit</label>
-                                <input required type="text" placeholder="e.g., kg, piece, liter" value={formData.unit} onChange={e => setFormData({ ...formData, unit: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all" />
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Unidade</label>
+                                <input required type="text" placeholder="ex.: kg, unidade, litro" value={formData.unit} onChange={e => setFormData({ ...formData, unit: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Stock</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Estoque</label>
                                 <input required type="number" min="0" value={formData.stock} onChange={e => setFormData({ ...formData, stock: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all" />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Product Image</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Imagem do Produto</label>
                                 <div className="flex items-center gap-4">
                                     {(imageFile || formData.image) && (
                                         <div className="size-16 rounded-lg border border-zinc-200 overflow-hidden shrink-0 bg-app-cream">
@@ -93,18 +93,18 @@ export default function AdminProductForm() {
                                 </div>
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-zinc-700 mb-2">Description</label>
+                                <label className="block text-sm font-medium text-zinc-700 mb-2">Descrição</label>
                                 <textarea required rows={4} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 focus:border-app-green focus:ring-1 focus:ring-app-green outline-none transition-all resize-none" />
                             </div>
                             <div className="flex items-center gap-3">
-                                <label htmlFor="isOrganic" className="text-sm font-medium text-zinc-700 cursor-pointer">Organic</label>
+                                <label htmlFor="isOrganic" className="text-sm font-medium text-zinc-700 cursor-pointer">Orgânico</label>
                                 <input type="checkbox" id="isOrganic" checked={formData.isOrganic} onChange={e => setFormData({ ...formData, isOrganic: e.target.checked })} className="size-5 text-app-green rounded border-zinc-300 focus:ring-app-green cursor-pointer" />
                             </div>
                         </div>
 
                         <div className="pt-6 border-t border-app-border flex justify-end">
                             <button disabled={saving} type="submit" className="px-6 py-2.5 bg-app-orange text-white font-medium rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50">
-                                {saving ? "Saving..." : "Save Product"}
+                                {saving ? "Salvando..." : "Salvar Produto"}
                             </button>
                         </div>
                     </form>

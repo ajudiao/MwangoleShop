@@ -18,6 +18,9 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminProductForm from "./pages/admin/AdminProductForm";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminDeliveryPartners from "./pages/admin/AdminDeliveryPartners";
+import DeliveryLogin from "./pages/delivery/DeliveryLogin";
+import DeliveryLayout from "./pages/delivery/DeliveryLayout";
+import DeliveryDashboard from "./pages/delivery/DeliveryDashboard";
 
 export function App() {
   return (
@@ -62,10 +65,15 @@ export function App() {
           <Route path="products/new" element={<AdminProductForm />} />
           <Route path="products/:id/edit" element={<AdminProductForm />} />
           <Route path="orders" element={<AdminOrders />} />
-          <Route path="dlivery-partners" element={<AdminDeliveryPartners />} />
+          <Route path="delivery-partners" element={<AdminDeliveryPartners />} />
         </Route>
 
-        
+        {/* Delivery Partner Pages */}
+        <Route path="/delivery/login" element={<DeliveryLogin />} />
+        <Route path="/delivery" element={<DeliveryLayout />}>
+          <Route index element={<DeliveryDashboard />} />
+        </Route>
+
       </Routes>
     </>
   );
