@@ -75,6 +75,5 @@ coverage/
 # =========================
 *.tsbuildinfo
 
-/server
-
 CART_CONTEXT_GUIDE.md
+
