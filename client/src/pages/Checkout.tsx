@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useCart } from "../contexts/CartContext";
 import { dummyAddressData } from "../assets/assets";
 import type { Address } from "../types";
-import { ArrowLeft, CheckIcon, ChevronsRightIcon, CreditCardIcon, MapPinIcon } from "lucide-react";
+import { ArrowLeft, CheckIcon, ChevronRight, CreditCardIcon, MapPinIcon } from "lucide-react";
 import CheckoutAddress from "../components/Checkout/CheckoutAddress";
 import CheckoutPayment from "../components/Checkout/CheckoutPayment";
 import CheckoutReview from "../components/Checkout/CheckoutReview";
@@ -93,7 +93,7 @@ export function Checkout() {
                         <div key={st.key} className="flex items-center gap-2">
                             <button onClick={() => setStep(st.key)} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${step === st.key ? "bg-app-green text-white" : "bg-white text-app-text-light"}`}>
                                 <st.icon className="size-4" /> {st.label}
-                                {index < step.length - 1 && <ChevronsRightIcon className="size-4 text-app-text-light" />}
+                                {index < step.length - 1 && <ChevronRight className="size-4 text-app-text-light" />}
                             </button>
                         </div>
                     ))}

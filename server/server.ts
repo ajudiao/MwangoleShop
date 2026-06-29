@@ -1,6 +1,9 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from 'express';
 import cors from "cors";
+import { serve } from "inngest/express";
+import { inngest, functions } from "./inngest/index.js"
+
 import authRouter from "./routes/authRoutes.js";
 import productRouter from "./routes/productRoutes.js";
 import uploadRouter from "./routes/uploadRoutes.js";
@@ -22,6 +25,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/orders", orderRouter);
+// Set up the "/api/inngest" (recommended) routes with the serve handler
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
