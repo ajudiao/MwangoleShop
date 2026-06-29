@@ -10,28 +10,25 @@ export const createOrder = async (req: Request, res: Response) => {
         return res.status(400).json({ message: 'Order items are required' });
     }
 
-    // Look uo actual price from database for each item to prevent price manipulation
+    // Look up actual price from database for each item to prevent price manipulation
     const productIds = items.map((item: any) => item.productId);
-    const products = await prisma.product.findMany({
-        where: { id: { in: productIds } }
-    });
+    const products = await prisma.product.findMany({ where: { id: { in: productIds } } });
 
     const productMap: Record<string, (typeof products)[0]> = {};
-
     products.forEach((product) => {
         productMap[product.id] = product;
     });
 
     for (const item of items) {
-        const product = productMap[item.product];
+        const product = productMap[item.productId];
         if (!product || (product.stock ?? 0) < item.quantity) {
             return res.status(404).json({ message: 'Insufficient stock for one or more items' });
         }
     }
 
     const orderItems = items.map((item: any) => {
-        const dbProduct = productMap[item.product];
-        if (!dbProduct) throw new Error(`Product with ID ${item.product} not found`);
+        const dbProduct = productMap[item.productId];
+        if (!dbProduct) throw new Error(`Product with ID ${item.productId} not found`);
         return {
             productId: dbProduct.id,
             name: dbProduct.name,
@@ -44,8 +41,10 @@ export const createOrder = async (req: Request, res: Response) => {
 
     const subtotal = orderItems.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
 
-    const deliveryFee = subtotal > 100 ? 0 : 2.5; // Example: Free delivery for orders over $100
-    const tax = Math.round(subtotal * 2.5 * 100) / 100; // Example: 25% tax
+    const deliveryFee = subtotal > 100 ? 0 : 2.5; // Free delivery for orders over $100
+    // Use explicit tax percentage. Previously code multiplied by 2.5 which was incorrect.
+    const taxPercent = 0.25; // 25% tax example
+    const tax = Math.round(subtotal * taxPercent * 100) / 100;
     const total = Math.round((subtotal + deliveryFee + tax) * 100) / 100;
 
     const order = await prisma.order.create({
@@ -69,10 +68,10 @@ export const createOrder = async (req: Request, res: Response) => {
 
     res.json({ order })
 
-    // Decrease stock
+    // Decrease stock (use productId from the request items)
     for (const item of items) {
         await prisma.product.update({
-            where: { id: item.product },
+            where: { id: item.productId },
             data: { stock: { decrement: item.quantity } }
         })
     }
@@ -112,7 +111,7 @@ export const getUserOrders = async (req: Request, res: Response) => {
 // GET /api/orders/:id
 export const getOrder = async (req: Request, res: Response) => {
     const order = await prisma.order.findFirst({
-        where: { id: req.params, userId: req.user!.id },
+        where: { id: req.params.id as string, userId: req.user!.id },
         include: { deliveryPartner: { select: { name: true, phone: true, avatar: true, vehicleType: true } } }
     })
 

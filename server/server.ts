@@ -21,7 +21,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
 app.use("/api/upload", uploadRouter);
-app.use("/api/orderS", orderRouter);
+app.use("/api/orders", orderRouter);
 
 // Error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
