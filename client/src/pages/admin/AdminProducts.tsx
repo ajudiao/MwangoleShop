@@ -7,7 +7,7 @@ import { Loading } from "../../components/Loading";
 
 export default function AdminProducts() {
 
-    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);

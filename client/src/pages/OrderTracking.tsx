@@ -11,7 +11,7 @@ import OrderTimeLine from "../components/OrderTracking/OrderTimeLine"
 
 export function OrderTracking() {
 
-    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
     const { id } = useParams()
     const navigate = useNavigate()

@@ -8,7 +8,7 @@ import { CalendarIcon, ChevronRightIcon, PackageIcon } from "lucide-react"
 
 export function MyOrders() {
 
-    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
     const [orders, setOrders] = useState<Order[]>([])
     const [loading, setLoading] = useState(true)

@@ -12,7 +12,7 @@ interface DeliveryOrderCardProps {
 
 export default function DeliveryOrderCard({ order, tab, handleUpdateStatus, setOtpModal, setCancelModal }: DeliveryOrderCardProps) {
 
-    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "$";
+    const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
     const user = typeof order.user === "object" ? order.user : { name: "Cliente", email: "", phone: "" };
     const statusLabels: any = {
