@@ -4,10 +4,18 @@ import sendEmail from "../config/nodemailer.js";
 
 const LOW_STOCK_THRESHOLD = 10
 
+const normalizeEmails = (value?: string) =>
+  (value ?? "")
+    .split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
+
+const getClientUrl = () => process.env.CLIENT_URL || "http://localhost:5173";
+
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "mwangole-shop" });
 
-// Low Stock Alert to admin Email
+// Low Stock Alert to admin email
 const checkLowStock = inngest.createFunction(
   {
     id: "check-low-stock",
@@ -28,14 +36,15 @@ const checkLowStock = inngest.createFunction(
     }
 
     await step.run("send-low-stock-email", async () => {
-      const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",").map((e) => e.trim()) : [];
+      const adminEmails = normalizeEmails(process.env.ADMIN_EMAILS);
 
       if (adminEmails.length === 0) return { skipped: true, reason: "No admin emails" }
 
-      await sendEmail({
-        to: adminEmails.join(","),
-        subject: `Low Stock Alert: ${product.name}`,
-        body: `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;">
+      try {
+        await sendEmail({
+          to: adminEmails.join(","),
+          subject: `Low Stock Alert: ${product.name}`,
+          body: `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #dc2626, #ef4444); padding: 24px 28px;">
                             <h2 style="color: #fff; margin: 0; font-size: 20px;">Low Stock Alert</h2>
                         </div>
@@ -55,31 +64,45 @@ const checkLowStock = inngest.createFunction(
                             <p style="margin: 20px 0 0; font-size: 13px; color: #9ca3af; text-align: center;">Please restock this item as soon as possible.</p>
                         </div>
                     </div>`,
-      })
+        })
+      } catch (error) {
+        console.error("Failed to send low stock alert", error)
+        return { skipped: true, reason: "Email send failed" }
+      }
     })
 
     return { alerted: true, product: product.name, stock: product.stock }
   },
 );
 
-// Monthly Offers Email (1fs of every month - payday)
+// Monthly Offers Email (1st of every month - payday)
 const sendMonthlyOffers = inngest.createFunction({
   id: "send-monthly-offers",
   name: "Monthly Payday offers",
   triggers: [cron("0 10 1 * *")]
 }, async ({ step }) => {
   const { deals, users } = await step.run("fetch-deals-and-users", async () => {
-    // Get top discounted products as featured deals
     const products = await prisma.product.findMany({
       where: { stock: { gt: 0 } },
-      orderBy: { originalPrice: "desc" },
-      take: 6,
+      take: 20,
     })
+
+    const featuredDeals = products
+      .map((product) => {
+        const originalPrice = product.originalPrice ?? product.price;
+        const discountPercent = originalPrice > product.price
+          ? ((originalPrice - product.price) / originalPrice) * 100
+          : 0;
+
+        return { ...product, discountPercent };
+      })
+      .sort((a, b) => b.discountPercent - a.discountPercent || (b.originalPrice ?? b.price) - (a.originalPrice ?? a.price))
+      .slice(0, 6);
 
     const allUsers = await prisma.user.findMany({
       select: { name: true, email: true }
     })
-    return { deals: products, users: allUsers }
+    return { deals: featuredDeals, users: allUsers }
   })
 
   if (users.length === 0 || deals.length === 0) {
@@ -95,10 +118,11 @@ const sendMonthlyOffers = inngest.createFunction({
 
     await step.run(`send-offers-batch-${i}`, async () => {
       for (const u of batch) {
-        await sendEmail({
-          to: u.email,
-          subject: `Fresh Picks Just For You!`,
-          body: `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;">
+        try {
+          await sendEmail({
+            to: u.email,
+            subject: `Fresh Picks Just For You!`,
+            body: `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;">
                 
                 <div style="background: linear-gradient(135deg, #f97316, #fb923c); padding: 24px 28px;">
                     <h2 style="color: #fff; margin: 0; font-size: 20px;">Fresh Picks Just For You!</h2>
@@ -148,14 +172,18 @@ const sendMonthlyOffers = inngest.createFunction({
                     </table>
 
                     <div style="text-align: center; margin-top: 24px;">
-                        <a href="${process.env.CLIENT_URL || "http://localhost:5173"}/products"
+                        <a href="${getClientUrl()}/products"
                            style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px;">
                            Shop All Deals →
                         </a>
                     </div>
                 </div>
             </div>`
-        })
+          })
+          sentCount += 1
+        } catch (error) {
+          console.error(`Failed to send monthly offer to ${u.email}`, error)
+        }
       }
     })
     sentCount += batch.length
@@ -171,7 +199,7 @@ const autoAssignRider = inngest.createFunction({
 }, async ({ event, step }) => {
   const {orderId} = event.data
 
-  // Wait 5 minutes before attemting assignment
+  // Wait 5 minutes before attempting assignment
   await step.sleep('wait-5-min', '5m')
 
   const result = await step.run("assign-rider", async () => {
@@ -194,12 +222,14 @@ const autoAssignRider = inngest.createFunction({
       select: {deliveryPartnerId: true},
     })
 
-    const busyRiderIds = busyOrders.map((o) => o.deliveryPartnerId)
+    const busyRiderIds = busyOrders
+      .map((o) => o.deliveryPartnerId)
+      .filter((id): id is string => Boolean(id))
 
     const availableRider = await prisma.deliveryPartner.findFirst({
       where: {
         isActive: true,
-        id: {notIn: busyRiderIds as string[]}
+        ...(busyRiderIds.length > 0 ? { id: { notIn: busyRiderIds } } : {})
       }
     })
 

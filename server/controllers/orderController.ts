@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'; // importa os tipos do Express para tipar req e res
 import { prisma } from '../config/prisma.js'; // importa a instância do Prisma para acessar o banco
+import { inngest } from '../inngest/index.js';
 
 // Create order
 // POST /api/orders
@@ -60,7 +61,7 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
         }
     })
 
-    if(paymentMethod === 'card') { // caso o pagamento seja por cartão
+    if (paymentMethod === 'card') { // caso o pagamento seja por cartão
         // aqui poderia entrar a lógica de pagamento via cartão, como Stripe
 
     }
@@ -68,13 +69,25 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
     res.json({ order }) // retorna o pedido criado para o cliente
 
     // Atualiza o estoque de cada produto após criar o pedido
-    for (const item of items) {
+    for (const item of orderItems) {
         await prisma.product.update({
             where: { id: item.productId },
             data: { stock: { decrement: item.quantity } }
         })
     }
     // comentário: o código acima já reduz o estoque dos produtos do pedido
+
+    // Send stock update events for each product in the order
+    for(const item of orderItems) {
+        await inngest.send({
+            name: "inventory/stock.updated",
+            data: { productId: item.productId, quantity: item.quantity }
+        })
+    }
+    await inngest.send({
+        name: "order/placed",
+        data: { orderId: order.id }
+    })
 }
 
 
