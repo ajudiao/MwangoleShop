@@ -4,7 +4,8 @@ import bcrypt from "bcrypt"
 
 
 // get admin deashboard data
-export const getAdminDashboardData = async (req: Request, res: Response) => {
+// outro nome seria getAdminStats getAdminDashboardData
+export const getAdminStats = async (req: Request, res: Response) => {
     const [totalOrders, totalUsers, totalProducts, outOfStock, totalPartners, recentOrders] = await Promise.all([
         prisma.order.count({
             where: { NOT: [{ paymentMethod: "card", isPaid: false }] }
@@ -56,7 +57,7 @@ export const createDeliveryPartner = async (req: Request, res: Response) => {
 }
 
 // Update delivery partner profile for admin
-const updateDeliveryPartner = async (req: Request, res: Response) => {
+export const updateDeliveryPartner = async (req: Request, res: Response) => {
     // const { name, phone, email, vehicleType, isActive } = req.body
     const { name, phone, vehicleType, isActive } = req.body
 
