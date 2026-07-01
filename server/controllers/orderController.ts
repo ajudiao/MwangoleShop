@@ -81,7 +81,7 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
     for(const item of orderItems) {
         await inngest.send({
             name: "inventory/stock.updated",
-            data: { productId: item.productId, quantity: item.quantity }
+            data: { productId: item.productId }
         })
     }
     await inngest.send({

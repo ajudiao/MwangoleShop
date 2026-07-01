@@ -12,10 +12,10 @@ const normalizeEmails = (value?: string) =>
 
 const getClientUrl = () => process.env.CLIENT_URL || "http://localhost:5173";
 
-// Create a client to send and receive events
+// Cria um cliente para enviar e receber eventos
 export const inngest = new Inngest({ id: "mwangole-shop" });
 
-// Low Stock Alert to admin email
+// Alerta de estoque baixo para o e-mail do administrador
 const checkLowStock = inngest.createFunction(
   {
     id: "check-low-stock",
@@ -75,7 +75,7 @@ const checkLowStock = inngest.createFunction(
   },
 );
 
-// Monthly Offers Email (1st of every month - payday)
+// E-mail mensal de ofertas (1º de cada mês - dia de pagamento)
 const sendMonthlyOffers = inngest.createFunction({
   id: "send-monthly-offers",
   name: "Monthly Payday offers",
@@ -111,7 +111,7 @@ const sendMonthlyOffers = inngest.createFunction({
 
   let sentCount = 0
 
-  // Send in batches of 10 to avoid overwhelming mail server
+  // Envia em lotes de 10 para não sobrecarregar o servidor de e-mail
   const batchSize = 10
   for (let i = 0; i < users.length; i += batchSize) {
     const batch = users.slice(i, i + batchSize)
@@ -186,12 +186,11 @@ const sendMonthlyOffers = inngest.createFunction({
         }
       }
     })
-    sentCount += batch.length
   }
   return { sent: sentCount }
 })
 
-// Auto-Assign Rider after 5 minutes
+// Atribuição automática de entregador após 5 minutos
 const autoAssignRider = inngest.createFunction({
   id: "auto-assign-rider",
   name: "Auto Assign Mwangole Rider",
@@ -199,13 +198,13 @@ const autoAssignRider = inngest.createFunction({
 }, async ({ event, step }) => {
   const {orderId} = event.data
 
-  // Wait 5 minutes before attempting assignment
+  // Espera 5 minutos antes de tentar a atribuição
   await step.sleep('wait-5-min', '5m')
 
   const result = await step.run("assign-rider", async () => {
     const order = await prisma.order.findUnique({where: {id: orderId}})
 
-    // Skip if order doesn't exist, already assigned, or cancelled
+    // Ignora se o pedido não existir, já estiver atribuído ou cancelado
     if(!order) 
       return {skipped: true, reason: "Order not found"}
     if(order.deliveryPartnerId)
@@ -213,7 +212,7 @@ const autoAssignRider = inngest.createFunction({
     if(["Cancelled", "Delivered"].includes(order.status as string))
       return { skipped: true, reason: `Order is ${order.status}` }
 
-    // Find an active rider not currently delivering
+    // Procura um entregador ativo que não esteja em entrega no momento
     const busyOrders = await prisma.order.findMany({
       where: {
         status: {in: ["Assigned", "Packed", "Out for Delivery"]},
@@ -236,7 +235,7 @@ const autoAssignRider = inngest.createFunction({
     if (!availableRider) 
       return {skipped: true, reason: "No riders available"}
 
-    // Generate 6-digit OTP
+    // Gera um OTP de 6 dígitos
     const otp = Math.floor(100000 + Math.random() * 900000).toString()
 
     const history = (Array.isArray(order.statusHistory) ? order.statusHistory : []) as any[]
@@ -267,5 +266,5 @@ const autoAssignRider = inngest.createFunction({
   return result
 })
 
-// Create an empty array where we'll export future Inngest functions
+// Cria um array vazio onde serão exportadas as funções futuras do Inngest
 export const functions = [checkLowStock, sendMonthlyOffers, autoAssignRider];
