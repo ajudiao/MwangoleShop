@@ -8,6 +8,8 @@ import {
   UserIcon,
 } from "lucide-react";
 import { heroSectionData } from "../assets/assets";
+import { useAuth } from "../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 export function Login() {
   const [isLoginState, setIsLoginState] = useState(true);
@@ -16,11 +18,23 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const {login, register} = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => (window.location.href = "/"), 1000);
-  };
+    try {
+      if(isLoginState) {
+        await login(email, password);
+      } else {
+        await register(name, email, password);
+      }
+    } catch(error: any) {
+      toast.error(error.response?.data?.message || "Ocorreu um erro. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="min-h-screen flex">
