@@ -7,14 +7,17 @@ import { ArrowLeft, CheckIcon, ChevronRight, CreditCardIcon, MapPinIcon } from "
 import CheckoutAddress from "../components/Checkout/CheckoutAddress";
 import CheckoutPayment from "../components/Checkout/CheckoutPayment";
 import CheckoutReview from "../components/Checkout/CheckoutReview";
+import api from "../config/api";
+import toast from "react-hot-toast";
+import { useAuth } from "../contexts/AuthContext";
 
 export function Checkout() {
     const navigate = useNavigate()
     const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
-    const { items, cartTotal } = useCart()
-    const { user } = { user: { addresses: dummyAddressData } }
-
+    const { items, cartTotal, clearCart } = useCart()
+    const { user } = useAuth()
+ 
     const [step, setStep] = useState("address")
     const [loading, setLoading] = useState(false)
 
@@ -43,7 +46,43 @@ export function Checkout() {
 
     const handlePlaceOrder = async () => {
         setLoading(true)
-        navigate("/orders")
+        try {
+            const orderItems = items.map((item) => ({
+                productId: item.product?.id ?? item.productId,
+                quantity: item.quantity,
+            }))
+
+            const invalidItem = orderItems.find((item) => !item.productId)
+            if (invalidItem) {
+                toast.error('Há um item no carrinho sem productId válido. Atualize o carrinho e tente novamente.')
+                setLoading(false)
+                return
+            }
+
+            const orderData = {
+                items: orderItems,
+                shippingAddress: address,
+                paymentMethod,
+
+            }
+
+            const { data } = await api.post("/orders", orderData)
+            console.log("Pedido realizado com sucesso:", data)
+            //clearCart()
+
+            if(data.url) {
+                window.location.href = data.url
+                return
+            }
+            clearCart()
+            toast.success("Pedido realizado com sucesso!")
+            navigate(`/order/${data.order.id}`)
+        } catch(error: any) {
+            toast.error((error.response?.data?.message || error.message || "Erro ao realizar pedido."))
+        } finally {
+            setLoading(false)
+            scrollTo(0, 0)
+        }
     }
 
     // Populate address from user's default address

@@ -1,15 +1,32 @@
+import { toast } from "react-hot-toast/headless";
 import type { Address } from "../types";
 import { CheckIcon, MapPinIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import api from "../config/api";
+import { useAuth } from "../contexts/AuthContext";
 
 interface AddressCardProps {
     addr: Address;
     onEditHandler: (address: Address) => void;
+    setAddresses: (addresses: Address[]) => void;
 }
 
-export function AddressCard({ addr, onEditHandler }: AddressCardProps) {
+export function AddressCard({ addr, onEditHandler, setAddresses }: AddressCardProps) {
+    const { updateUser } = useAuth()
 
     const onDeleteHandler = async (id: string) => {
-        console.log(id)
+
+        try {
+            const confirm = window.confirm("Tem certeza que deseja excluir este endereço?");
+            if (!confirm) return;
+            const { data } = await api.delete(`/addresses/${id}`);
+
+            setAddresses(data.addresses);
+            updateUser({ addresses: data.addresses });
+            toast.success("Endereço excluído com sucesso!");
+        } catch (error: any) {  
+            toast.error(error.response?.data?.message || error.message || "Erro ao excluir endereço.");
+
+        }
     }
 
     return (
@@ -37,13 +54,13 @@ export function AddressCard({ addr, onEditHandler }: AddressCardProps) {
 
             {/* Right - Action Buttons */}
             <div className="flex items-center gap-1">
-                    <button onClick={() =>onEditHandler(addr)} className="p-2 text-app-text-light hover:text-app-green hover:bg-app-cream rounded-lg transition-colors">
-                        <PencilIcon className="size-4" />
-                    </button>
+                <button onClick={() => onEditHandler(addr)} className="p-2 text-app-text-light hover:text-app-green hover:bg-app-cream rounded-lg transition-colors">
+                    <PencilIcon className="size-4" />
+                </button>
 
-                    <button onClick={() => onDeleteHandler(addr.id)} className="p-2 text-app-text-light hover:text-app-error hover:bg-app-cream rounded-lg transition-colors">
-                        <Trash2Icon className="size-4" />
-                    </button>
+                <button onClick={() => onDeleteHandler(addr.id)} className="p-2 text-app-text-light hover:text-app-error hover:bg-app-cream rounded-lg transition-colors">
+                    <Trash2Icon className="size-4" />
+                </button>
             </div>
         </div>
     )

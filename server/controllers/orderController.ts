@@ -5,15 +5,29 @@ import { inngest } from '../inngest/index.js';
 // Create order
 // POST /api/orders
 export const createOrder = async (req: Request, res: Response) => { // cria um pedido
-    const { items, shippingAddress, paymentMethod } = req.body; // pega itens, endereço e forma de pagamento do corpo da requisição
+    const { items, shippingAddress: shippingAddressBody, addressId, paymentMethod } = req.body; // pega itens, endereço/ID e forma de pagamento do corpo da requisição
 
-    if (!items || items.length === 0) { // valida se existe pelo menos um item no pedido
+    if (!Array.isArray(items) || items.length === 0) { // valida se existe pelo menos um item no pedido
         return res.status(400).json({ message: 'Order items are required' }); // retorna erro 400 se não houver itens
     }
 
     // Busca os produtos reais no banco para evitar manipulação de preços no front-end
-    const productIds = items.map((item: any) => item.productId); // extrai IDs dos produtos do pedido
-    const products = await prisma.product.findMany({ where: { id: { in: productIds } } }); // busca os produtos pelo ID
+    const sanitizedItems = items.map((item: any) => ({
+        ...item,
+        productId: item.productId ?? item.product?.id,
+    }));
+
+    const validProductIds = sanitizedItems
+        .map((item) => item.productId)
+        .filter((id) => typeof id === 'string' && id.trim() !== '') as string[];
+
+    if (validProductIds.length !== sanitizedItems.length) {
+        console.error('Invalid order items payload', { items: sanitizedItems });
+        return res.status(400).json({ message: 'Each order item must include a valid productId' });
+    }
+
+    const uniqueProductIds = Array.from(new Set(validProductIds));
+    const products = await prisma.product.findMany({ where: { id: { in: uniqueProductIds } } }); // busca os produtos pelo ID
 
     const productMap: Record<string, (typeof products)[0]> = {}; // cria um mapa para acessar produtos por ID
     products.forEach((product) => {
@@ -47,11 +61,34 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
     const tax = Math.round(subtotal * taxPercent * 100) / 100; // calcula imposto e arredonda para 2 casas
     const total = Math.round((subtotal + deliveryFee + tax) * 100) / 100; // calcula total final e arredonda
 
+    // Resolve shipping address: prefer explicit shippingAddress, otherwise resolve addressId
+    let shippingAddress = shippingAddressBody
+    if (!shippingAddress && addressId) {
+        const addr = await prisma.address.findUnique({ where: { id: String(addressId) } })
+        // ensure address belongs to user when possible
+        if (addr && addr.userId === req.user?.id) {
+            shippingAddress = {
+                id: addr.id,
+                label: addr.label,
+                address: addr.address,
+                city: addr.city,
+                state: addr.state,
+                zip: addr.zip,
+                lat: addr.lat,
+                lng: addr.lng,
+            }
+        }
+    }
+
+    if (!shippingAddress) {
+        return res.status(400).json({ message: 'shippingAddress or addressId is required' })
+    }
+
     const order = await prisma.order.create({ // cria o pedido no banco de dados
         data: {
             userId: req.user?.id as string, // associa pedido ao usuário autenticado
             items: orderItems, // itens convertidos para salvar no banco
-            shippingAddress, // endereço de entrega
+            shippingAddress, // endereço de entrega (JSON)
             paymentMethod, // forma de pagamento escolhida
             subtotal, // subtotal do pedido
             deliveryFee, // valor do frete
@@ -111,7 +148,7 @@ export const getUserOrders = async (req: Request, res: Response) => { // retorna
         orderBy: { createdAt: 'desc' }, // ordena do mais recente para o mais antigo
     });
 
-    res.json(orders); // retorna a lista de pedidos
+    res.json({ orders }); // retorna a lista de pedidos em formato consistente
 }
 
 // GET single order

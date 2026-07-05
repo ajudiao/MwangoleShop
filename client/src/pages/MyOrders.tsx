@@ -5,6 +5,8 @@ import { dummyDashboardOrdersData, statusColors } from "../assets/assets"
 import { useCart } from "../contexts/CartContext"
 import { Loading } from "../components/Loading"
 import { CalendarIcon, ChevronRightIcon, PackageIcon } from "lucide-react"
+import api from "../config/api"
+import toast from "react-hot-toast"
 
 export function MyOrders() {
 
@@ -20,8 +22,20 @@ export function MyOrders() {
     const { clearCart } = useCart()
 
     const fetchOrders = async () => {
-        setOrders(dummyDashboardOrdersData as any)
-        setLoading(false)
+        try {
+            const params = activeTab === "all" ? '' : `?status=${activeTab}`
+
+            const { data } = await api.get(`/orders${params}`)
+            const responseOrders = Array.isArray(data) ? data : data.orders
+            if (!Array.isArray(responseOrders)) {
+                throw new Error('Unexpected orders response')
+            }
+            setOrders(responseOrders)
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message || "Erro ao carregar pedidos.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     useEffect(() => {
