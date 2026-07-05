@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../types";
-import { dummyProducts } from "../assets/assets";
 import { Zap } from "lucide-react";
 import { Loading } from "../components/Loading";
 import { ProductCard } from "../components/ProductCard";
+import api from "../config/api";
+import toast from "react-hot-toast";
 
 export function FlashDeals() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setProducts(dummyProducts.filter((p: any) => p.stock > 0))
-        setTimeout(() => setLoading(false), 1000)
-    }, [])
+        api.get("/products/flash-deals")
+            .then((response) => {
+                setProducts(response.data.products);
+                setLoading(false);
+            })
+            .catch((error: any) => {
+                toast.error((error.response?.data?.message || error.message || "Erro ao carregar ofertas relâmpago.")
+                );
+                setLoading(false);
+            });
+    }, []);
 
     return (
         <div className="min-h-screen bg-app-cream">

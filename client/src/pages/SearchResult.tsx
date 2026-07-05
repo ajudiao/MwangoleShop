@@ -5,6 +5,8 @@ import { dummyProducts } from "../assets/assets";
 import { HomeIcon, Search } from "lucide-react";
 import { Loading } from "../components/Loading";
 import { ProductCard } from "../components/ProductCard";
+import api from "../config/api";
+import { toast } from "react-hot-toast/headless";
 
 export function SearchResult() {
 
@@ -16,8 +18,16 @@ export function SearchResult() {
   useEffect(() => {
     if (!query) return
     setLoading(true)
-    setProducts(dummyProducts.filter((p: Product) => p.name.toLocaleLowerCase().includes(query.toLowerCase())))
-    setLoading(false)
+    api.get(`/products?search=${encodeURIComponent(query)}`)
+      .then((response) => {
+        setProducts(response.data.products);
+        setLoading(false);
+      })
+      .catch((error: any) => {
+        toast.error((error.response?.data?.message || error.message || "Erro ao carregar resultados da pesquisa.")
+        );
+        setLoading(false);
+      }).finally(() => setLoading(false));
   }, [query])
 
   return (
