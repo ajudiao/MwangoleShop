@@ -42,7 +42,7 @@ const [liveLocation, setLiveLocation] = useState<{ lat: number, lng: number } | 
 
 ```tsx
 useEffect(() => {
-    setOrder(dummyDashboardOrdersData.find((o) => o._id === id) as any);
+    setOrder(dummyDashboardOrdersData.find((o) => o.id === id) as any);
     setLoading(false);
 }, [id, navigate]);
 ```
@@ -120,7 +120,7 @@ if (!order) return null;
 <div className="flex items-center justify-between mb-8">
     <div>
         <h1 className="text-2xl font-semibold text-app-green">
-            Order #{order!._id.slice(-8).toUpperCase()}
+            Order #{order!.id.slice(-8).toUpperCase()}
         </h1>
         <p className="text-sm text-app-text-light mt-1">
             Placed on {new Date(order!.createdAt).toLocaleDateString(...)}
@@ -142,7 +142,7 @@ if (!order) return null;
 
 1. **Título com ID**
    ```tsx
-   Order #{order!._id.slice(-8).toUpperCase()}
+   Order #{order!.id.slice(-8).toUpperCase()}
    ```
    - Mostra últimos 8 caracteres em maiúscula
 
@@ -314,7 +314,7 @@ order.status !== "Cancelled"                 // Não foi cancelado?
 ## Dicas Importantes
 
 1. **`order?.deliveryPartner`** - Optional chaining (seguro se null)
-2. **`order!._id`** - `!` diz "tenho certeza que existe"
+2. **`order!.id`** - `!` diz "tenho certeza que existe"
 3. **`href="tel:${phone}"`** - Abre discador do celular
 4. **`charAt(0)`** - Primeiro caractere de string
 5. **Grid responsivo** - Desktop (3 cols), Mobile (1 col)

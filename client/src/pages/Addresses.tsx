@@ -13,7 +13,7 @@ export function Addresses() {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState<Address>({
-        _id: "",
+        id: "",
         label: "",
         address: "",
         city: "",
@@ -26,7 +26,7 @@ export function Addresses() {
 
     const resetForm = () => {
         setForm({
-            _id: "",
+            id: "",
             label: "",
             address: "",
             city: "",
@@ -46,7 +46,7 @@ export function Addresses() {
 
     const onEditHandler = (add: Address) => {
         setForm({
-            _id: add._id,
+            id: add.id,
             label: add.label,
             address: add.address,
             city: add.city,
@@ -56,7 +56,7 @@ export function Addresses() {
             lat: add.lat,
             lng: add.lng,
         });
-        setEditingId(add._id)
+        setEditingId(add.id)
         setShowForm(true)
     }
 
@@ -94,7 +94,7 @@ export function Addresses() {
                     ) : (
                         <div className="space-y-4">
                             {addresses.map((address) => (
-                                <AddressCard key={address._id} addr={address} onEditHandler={onEditHandler} />
+                                <AddressCard key={address.id} addr={address} onEditHandler={onEditHandler} />
                             ))}
                         </div>
                     )

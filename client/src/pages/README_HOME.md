@@ -12,7 +12,7 @@ export function Home() {
             <Hero />
             <Features />
             <HomeCategories />
-            <PopularProduts />
+            <PopularProducts />
             <AppPromoBanner />
             <Newsletter />
         </div>
@@ -27,7 +27,7 @@ export function Home() {
 1. **`Hero`** - Banner principal com imagem/mensagem de boas-vindas
 2. **`Features`** - Seção mostrando características da loja (frete grátis, atendimento, etc)
 3. **`HomeCategories`** - Grid de categorias para navegar para os produtos
-4. **`PopularProduts`** - Lista dos produtos mais populares
+4. **`PopularProducts`** - Lista dos produtos mais populares
 5. **`AppPromoBanner`** - Banner promocional para incentivar compras
 6. **`Newsletter`** - Seção para se inscrever na newsletter
 

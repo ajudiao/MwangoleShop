@@ -42,9 +42,9 @@ useEffect(() => {
     setLoading(true);
     setLocalQuantity(1);
     window.scrollTo(0, 0);
-    const product = dummyProducts.find((p) => p._id === id);
+    const product = dummyProducts.find((p) => p.id === id);
     setProduct(product!);
-    setRelatedProducts(dummyProducts.filter((p) => p._id !== id));
+    setRelatedProducts(dummyProducts.filter((p) => p.id !== id));
     setLoading(false);
 }, [id, navigate]);
 ```
@@ -58,7 +58,7 @@ window.scrollTo(0, 0);      // Sobe a página ao topo
 ```
 
 ```tsx
-const product = dummyProducts.find((p) => p._id === id);
+const product = dummyProducts.find((p) => p.id === id);
 setProduct(product!);
 ```
 - Procura o produto na lista `dummyProducts`
@@ -66,7 +66,7 @@ setProduct(product!);
 - `!` significa "tenho certeza que existe" (TypeScript)
 
 ```tsx
-setRelatedProducts(dummyProducts.filter((p) => p._id !== id));
+setRelatedProducts(dummyProducts.filter((p) => p.id !== id));
 ```
 - Pega todos os produtos EXCETO este (para mostrar similares)
 
@@ -79,7 +79,7 @@ setRelatedProducts(dummyProducts.filter((p) => p._id !== id));
 ## Lógica do Carrinho
 
 ```tsx
-const cartItem = items.find((item) => item.product._id === product._id);
+const cartItem = items.find((item) => item.product.id === product.id);
 const inCart = !!cartItem;
 const displayQuantity = inCart ? cartItem.quantity : localQuantity;
 ```
@@ -88,7 +88,7 @@ const displayQuantity = inCart ? cartItem.quantity : localQuantity;
 
 1. **Procura se produto já está no carrinho**
    ```tsx
-   cartItem = items.find((item) => item.product._id === product._id);
+   cartItem = items.find((item) => item.product.id === product.id);
    ```
    - Se encontra, `cartItem` = objeto do item
    - Se não encontra, `cartItem` = undefined
@@ -113,9 +113,9 @@ const displayQuantity = inCart ? cartItem.quantity : localQuantity;
 function handleMinus() {
     if (inCart) {
         if (cartItem.quantity > 1)
-            updateQuantity(product?._id, cartItem.quantity - 1);
+            updateQuantity(product?.id, cartItem.quantity - 1);
         else 
-            removeFromCart(product?._id);  // Remove se chegar a 0
+            removeFromCart(product?.id);  // Remove se chegar a 0
     } else {
         setLocalQuantity(Math.max(1, localQuantity - 1));  // Min 1
     }
@@ -123,7 +123,7 @@ function handleMinus() {
 
 function handlePlus() {
     if (inCart) 
-        updateQuantity(product?._id, cartItem.quantity + 1);
+        updateQuantity(product?.id, cartItem.quantity + 1);
     else 
         setLocalQuantity(localQuantity + 1);
 }

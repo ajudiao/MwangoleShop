@@ -15,17 +15,18 @@ import {
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export function NavBar() {
-  const user: any = {
-    name: "André Gideão",
-    email: "andre@gmail.com",
-    isAdmin: true
-  };
+  // const user: any = {
+  //   name: "André Gideão",
+  //   email: "andre@gmail.com",
+  //   isAdmin: true
+  // };
   // const user: any = null;
 
+  const { user, logout } = useAuth();
   const { cartCount, setIsCartOpen } = useCart()
-
   const [searchQuery, setSearchQuery] = useState("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,7 +41,9 @@ export function NavBar() {
 };
 
   const handleLogout = () => {
+    logout();
     setUserMenuOpen(false)
+    navigate("/");
   }
   
   return (

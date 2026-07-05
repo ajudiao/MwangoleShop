@@ -13,7 +13,7 @@ export function AddressCard({ addr, onEditHandler }: AddressCardProps) {
     }
 
     return (
-        <div key={addr._id} className="max-w-7xl bg-white rounded-2xl p-6 flex items-start justify-between gap-4 shadow-md">
+        <div key={addr.id} className="max-w-7xl bg-white rounded-2xl p-6 flex items-start justify-between gap-4 shadow-md">
             {/* Left */}
             <div className="flex gap-4">
                 <div className="size-10 rounded-xl bg-app-cream flex-center shrink-0">
@@ -41,7 +41,7 @@ export function AddressCard({ addr, onEditHandler }: AddressCardProps) {
                         <PencilIcon className="size-4" />
                     </button>
 
-                    <button onClick={() => onDeleteHandler(addr._id)} className="p-2 text-app-text-light hover:text-app-error hover:bg-app-cream rounded-lg transition-colors">
+                    <button onClick={() => onDeleteHandler(addr.id)} className="p-2 text-app-text-light hover:text-app-error hover:bg-app-cream rounded-lg transition-colors">
                         <Trash2Icon className="size-4" />
                     </button>
             </div>

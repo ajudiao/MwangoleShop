@@ -34,38 +34,55 @@ export const getFlashDeals = async (req: Request, res: Response) => {
 
 // GET /api/products/
 export async function getAllProducts(req: Request, res: Response) {
-    const { category, minPrice, maxPrice, search, sort } = req.query
+    const { category, minPrice, maxPrice, search, sort, page, limit } = req.query
 
-    const where: any = {}
-    if (category && category !== 'all') where.category = category as string
-    if (search) where.name = { contains: search as string, mode: 'insensitive' }
-    if (minPrice || maxPrice) {
-        where.price = {}
-        if (minPrice) where.price.gte = Number(minPrice)
-        if (maxPrice) where.price.lte = Number(maxPrice)
+    try {
+        const where: any = {}
+        if (category && category !== 'all') where.category = category as string
+        if (search) where.name = { contains: search as string, mode: 'insensitive' }
+        if (minPrice || maxPrice) {
+            where.price = {}
+            if (minPrice) where.price.gte = Number(minPrice)
+            if (maxPrice) where.price.lte = Number(maxPrice)
+        }
+
+        // pagination
+        const pageNum = page ? Math.max(1, Number(page)) : 1
+        const pageSize = limit ? Math.max(1, Number(limit)) : 12
+        const skip = (pageNum - 1) * pageSize
+
+        // sort mapping to match client values
+        const orderBy: any = {}
+        const sortVal = String(sort || '')
+        if (sortVal === 'price_asc' || sortVal === 'price-asc' || sortVal === 'price_asc') orderBy.price = 'asc'
+        else if (sortVal === 'price_desc' || sortVal === 'price-desc') orderBy.price = 'desc'
+        else if (sortVal === 'rating') orderBy.rating = 'desc'
+        else if (sortVal === 'name') orderBy.name = 'asc'
+        else orderBy.createdAt = 'desc'
+
+        const total = await prisma.product.count({ where })
+        const pages = Math.max(1, Math.ceil(total / pageSize))
+
+        const products = await prisma.product.findMany({ where, orderBy, skip, take: pageSize })
+
+        const productsWithDiscount = products.map((p) => {
+            const original = p.originalPrice ? Number(p.originalPrice) : 0;
+            const current = p.price ? Number(p.price) : 0;
+
+            const discount = (original > 0 && current > 0)
+                ? Math.round(((original - current) / original) * 100)
+                : 0;
+            return {
+                ...p,
+                discount
+            };
+        });
+
+        return res.json({ products: productsWithDiscount, total, pages })
+    } catch (error) {
+        console.error('Get All Products Error:', error)
+        return res.status(500).json({ message: 'Error fetching products' })
     }
-
-    const orderBy: any = {}
-    if (sort === 'price-low') orderBy.price = 'asc'
-    else if (sort === 'price-high') orderBy.price = 'desc'
-    else orderBy.name = 'asc'
-
-    const products = await prisma.product.findMany({ where, orderBy })
-
-    const productsWithDiscount = products.map((p) => {
-        const original = p.originalPrice ? Number(p.originalPrice) : 0;
-        const current = p.price ? Number(p.price) : 0;
-
-        const discount = (original > 0 && current > 0)
-            ? Math.round(((original - current) / original) * 100)
-            : 0;
-        return {
-            ...p,
-            discount
-        };
-    });
-
-    return res.json({ products: productsWithDiscount })
 }
 
 // GET /api/products/:id

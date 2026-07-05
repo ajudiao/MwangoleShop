@@ -48,7 +48,7 @@ export function Home() {
             <Hero />
             <Features />
             <HomeCategories />
-            <PopularProduts />
+            <PopularProducts />
             <AppPromoBanner />
             <Newsletter />
         </div>
@@ -195,7 +195,7 @@ ProductCard navega para página de detalhes:
 ```tsx
 const navigate = useNavigate();
 
-<div onClick={() => navigate(`/products/${product._id}`)}>
+<div onClick={() => navigate(`/products/${product.id}`)}>
   {/* Ao clicar, vai para /products/123 */}
 </div>
 ```
@@ -433,7 +433,7 @@ Estas vêm do arquivo `tailwind.config.ts`:
         ↓
 6. ProductCard mostra: nome, preço, imagem, rating
         ↓
-7. Ao clicar: navigate(`/products/${product._id}`)
+7. Ao clicar: navigate(`/products/${product.id}`)
 ```
 
 ### Adicionar ao Carrinho

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../types";
 import { Link, useSearchParams } from "react-router-dom";
-import { categoriesData, dummyProducts } from "../assets/assets";
+import { categoriesData } from "../assets/assets";
 import { ChevronDown, HomeIcon, SlidersHorizontal, XIcon } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
 import { Loading } from "../components/Loading";
 import { FilterPanel } from "../components/FilterPanel";
+import api from "../config/api";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
-  const [totalPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -23,10 +26,31 @@ export function Products() {
 
   const fetchProducts = async () => {
     setLoading(true);
-    setProducts(
-      dummyProducts.filter((p) => p.category === category || category === ""),
-    );
-    setLoading(false);
+    try {
+      const params = new URLSearchParams()
+      if (category) params.set('category', category)
+      if(organic) params.set('organic', organic)
+      if(sort) params.set('sort', sort)
+      if(maxPrice) params.set('maxPrice', maxPrice)
+        params.set('page', String(page))
+        params.set('limit', '12')
+
+        const { data } = await api.get(`/products/?${params.toString()}`)
+        setProducts(data.products)
+        setTotalPages(data.pages)
+    } catch (error: unknown) {
+      // safe error handling without optional-chaining on unknown
+      if (axios.isAxiosError(error)) {
+        toast.error((error.response && (error.response as any).data && (error.response as any).data.message) || error.message)
+      } else if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('Erro inesperado')
+      }
+    } finally {
+      setLoading(false)
+    }
+
   };
 
   const updateFilter = (key: string, value: string) => {
@@ -133,16 +157,16 @@ export function Products() {
                 {products.map(
                   (product) =>
                     product.stock > 0 && (
-                      <ProductCard key={product._id} product={product} />
+                      <ProductCard key={product.id} product={product} />
                     ),
                 )}
               </div>
             )}
 
             {/* Pagination */}
-            {totalPage > 1 && (
+            {totalPages > 1 && (
               <div className="flex-center  gap-2 mt-16">
-                {Array.from({ length: totalPage }).map((_, i) => (
+                {Array.from({ length: totalPages }).map((_, i) => (
                   <button
                     onClick={() => {
                       updateFilter("page", String(i + 1));

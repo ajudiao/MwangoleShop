@@ -103,7 +103,7 @@ useEffect(() => {
     ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
             {products.map((product) => product.stock > 0 && (
-                <ProductCard key={product._id} product={product} />
+                <ProductCard key={product.id} product={product} />
             ))}
         </div>
     )
@@ -156,7 +156,7 @@ useEffect(() => {
     ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
             {products.map((product) => product.stock > 0 && (
-                <ProductCard key={product._id} product={product} />
+                <ProductCard key={product.id} product={product} />
             ))}
         </div>
 ```
@@ -170,7 +170,7 @@ useEffect(() => {
 **Mapeamento:**
 ```tsx
 products.map((product) => product.stock > 0 && (
-    <ProductCard key={product._id} product={product} />
+    <ProductCard key={product.id} product={product} />
 ))
 ```
 
@@ -249,6 +249,6 @@ Neste caso, queremos só uma vez porque dados não mudam depois (dados fake).
 1. **`filter()` cria novo array** - original não é modificado
 2. **`stock > 0`** - Verifica se tem estoque
 3. **Grid responsivo com Tailwind** - Muda colunas conforme tela
-4. **`key={product._id}`** é OBRIGATÓRIO em listas
+4. **`key={product.id}`** é OBRIGATÓRIO em listas
 5. **`loading ? X : Y`** é ternário (if/else em uma linha)
 6. **`size-16`** = 64px (tamanho em Tailwind)

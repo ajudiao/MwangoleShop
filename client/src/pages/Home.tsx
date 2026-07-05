@@ -3,7 +3,7 @@ import { Features } from "../components/Home/Features";
 import { Hero } from "../components/Home/Hero";
 import { HomeCategories } from "../components/Home/HomeCategories";
 import { Newsletter } from "../components/Home/Newsletter";
-import { PopularProduts } from "../components/Home/PopularProducts";
+import { PopularProducts } from "../components/Home/PopularProducts";
 
 
 
@@ -14,7 +14,7 @@ export function Home() {
             <Hero />
             <Features />
             <HomeCategories />
-            <PopularProduts />
+            <PopularProducts />
             <AppPromoBanner />
             <Newsletter />
         </div>

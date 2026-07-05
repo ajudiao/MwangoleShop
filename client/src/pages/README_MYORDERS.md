@@ -180,12 +180,12 @@ const fetchOrders = async () => {
 ## Cada Pedido - Estrutura
 
 ```tsx
-<Link to={`/orders/${order._id}`} className="...">
+<Link to={`/orders/${order.id}`} className="...">
     {/* Order id, date & status */}
     <div className="flex items-start justify-between mb-3">
         <div>
             <p className="text-sm font-medium text-app-green">
-                Order #{order._id.slice(-8).toUpperCase()}
+                Order #{order.id.slice(-8).toUpperCase()}
             </p>
             <div className="flex items-center gap-2 mt-1">
                 <CalendarIcon className="size-3" />
@@ -227,7 +227,7 @@ const fetchOrders = async () => {
 
 ### 1. Order ID e Data
 ```tsx
-Order #{order._id.slice(-8).toUpperCase()}
+Order #{order.id.slice(-8).toUpperCase()}
 ```
 - `slice(-8)` - Pega últimos 8 caracteres do ID
 - `toUpperCase()` - Converte para maiúscula
@@ -279,7 +279,7 @@ Pedido com 6 itens:
 ## Link para Detalhes
 
 ```tsx
-<Link to={`/orders/${order._id}`} className="...">
+<Link to={`/orders/${order.id}`} className="...">
 ```
 
 - Ao clicar em qualquer lugar do card, vai para `/orders/id_do_pedido`

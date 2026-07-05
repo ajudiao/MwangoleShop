@@ -17,7 +17,7 @@ const [products, setProducts] = useState<Product[]>([]);
 - **O que faz**: Guarda lista de produtos a exibir
 
 ```tsx
-const [totalPage, setTotalPage] = useState(1);
+const [totalPages, settotalPages] = useState(1);
 ```
 - **O que faz**: Guarda total de páginas para paginação
 
