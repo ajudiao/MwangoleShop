@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { TruckIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import type { DeliveryPartner } from "../../types";
-import { dummyDashboardOrdersData, dummyDeliveryPartnerData } from "../../assets/assets";
 import { Loading } from "../../components/Loading";
+import api from "../../config/api";
 
 export default function AdminOrders() {
 
@@ -16,13 +16,25 @@ export default function AdminOrders() {
     const [selectedPartner, setSelectedPartner] = useState("");
 
     const fetchOrders = async () => {
-        setOrders(dummyDashboardOrdersData)
-        setTimeout(() => setLoading(false), 1000)
+        try {
+            const { data } = await api.get("/orders/all");
+            setOrders(data);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao buscar pedidos.");
+        } finally {
+            setLoading(false)
+        }
     };
 
     const fetchPartners = async () => {
-        setPartners(dummyDeliveryPartnerData as any)
-        setTimeout(() => setLoading(false), 1000)
+        try {
+            const { data } = await api.get("/admin/delivery-partners");
+            setPartners((data.deliveryPartners || []).filter((p: DeliveryPartner) => p.isActive));
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao buscar parceiros de entrega.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -31,14 +43,26 @@ export default function AdminOrders() {
     }, []);
 
     const handleStatusChange = async (id: string, newStatus: string) => {
-        console.log(id, newStatus);
+        try {
+            await api.put(`/orders/${id}/status`, { status: newStatus });
+            toast.success("Status do pedido atualizado!");
+            fetchOrders(); // Refresh orders after status change
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao atualizar status do pedido.");
+        }
     };
 
     const handleAssign = async () => {
         if (!assignModal || !selectedPartner) return;
-        toast.success("Parceiro de entrega atribuído!");
-        setAssignModal(null);
-        setSelectedPartner("");
+        try {
+            await api.put(`/admin/orders/${assignModal}/assign`, { partnerId: selectedPartner });
+            toast.success("Parceiro de entrega atribuído com sucesso!");
+            setAssignModal(null);
+            setSelectedPartner("");
+            fetchOrders(); // Refresh orders after assignment
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao atribuir parceiro de entrega.");
+        }
     };
 
     const statusOptions = ["Placed", "Confirmed", "Assigned", "Packed", "Out for Delivery", "Delivered", "Cancelled"];

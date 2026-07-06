@@ -34,7 +34,7 @@ export const getAdminStats = async (req: Request, res: Response) => {
 export const getDeliveryPartners = async (req: Request, res: Response) => {
     const deliveryPartners = await prisma.deliveryPartner.findMany({
         orderBy: { createdAt: "desc" },
-        select: { id: true, name: true, phone: true, email: true, createdAt: true }
+        select: { id: true, name: true, phone: true, email: true, isActive: true, createdAt: true }
     })
     res.json({ deliveryPartners })
 }
@@ -66,7 +66,7 @@ export const updateDeliveryPartner = async (req: Request, res: Response) => {
     if(phone) data.phone = phone
     // if(email) data.email = email.toLowerCase()
     if(vehicleType) data.vehicleType = vehicleType
-    if(isActive !== undefined) data.isActive = isActive
+    data.isActive = isActive
 
     try {
         const partner = await prisma.deliveryPartner.update({
@@ -82,14 +82,19 @@ export const updateDeliveryPartner = async (req: Request, res: Response) => {
 
 // assign delivery partner to order for admin
 export const assignDeliveryPartner = async (req: Request, res: Response) => {
-    const { partnerId } = req.body
+    const { partnerId, deliveryPartnerId } = req.body
+    const selectedPartnerId = partnerId || deliveryPartnerId
+
+    if (!selectedPartnerId) {
+        return res.status(400).json({ message: "partnerId is required" })
+    }
 
     const order = await prisma.order.findUnique({
         where: { id: req.params.id as string }
     })
 
     const partner = await prisma.deliveryPartner.findUnique({
-        where: { id: partnerId }
+        where: { id: selectedPartnerId }
     })
 
     if(!order || !partner) {

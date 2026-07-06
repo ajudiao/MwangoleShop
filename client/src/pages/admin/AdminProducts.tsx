@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PlusIcon, EditIcon, XIcon } from "lucide-react";
 import type { Product } from "../../types";
-import { dummyProducts } from "../../assets/assets";
 import { Loading } from "../../components/Loading";
+import api from "../../config/api";
+import toast from "react-hot-toast";
 
 export default function AdminProducts() {
 
@@ -13,10 +14,14 @@ export default function AdminProducts() {
     const [loading, setLoading] = useState(true);
 
     const fetchProducts = async () => {
-        setProducts(dummyProducts);
-        setTimeout(() => {
+        try {
+            const { data } = await api.get("/products"); 
+            setProducts(data.products);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao buscar produtos.");
+        } finally {
             setLoading(false);
-        }, 1000);
+        }
     };
 
     useEffect(() => {
@@ -26,6 +31,14 @@ export default function AdminProducts() {
     const handleMarkOutOfStock = async (id: string, name: string) => {
         if (!window.confirm(`Tem certeza de que deseja marcar "${name}" como fora de estoque?`)) return;
         console.log(id);
+
+        try {
+            await api.delete(`/products/${id}`);
+            toast.success("Produto marcado como fora de estoque com sucesso!");
+            fetchProducts(); // Refresh products after marking as out of stock
+        }catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao remover produto.");
+        }
     };
 
     if (loading) return <Loading />

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { useCart } from "../contexts/CartContext";
-import { dummyAddressData } from "../assets/assets";
 import type { Address } from "../types";
 import { ArrowLeft, CheckIcon, ChevronRight, CreditCardIcon, MapPinIcon } from "lucide-react";
 import CheckoutAddress from "../components/Checkout/CheckoutAddress";
@@ -48,7 +47,7 @@ export function Checkout() {
         setLoading(true)
         try {
             const orderItems = items.map((item) => ({
-                productId: item.product?.id ?? item.productId,
+                productId: item.product?.id,
                 quantity: item.quantity,
             }))
 
@@ -71,12 +70,12 @@ export function Checkout() {
             //clearCart()
 
             if(data.url) {
-                window.location.href = data.url
+                window.location.href = data.url 
                 return
             }
             clearCart()
             toast.success("Pedido realizado com sucesso!")
-            navigate(`/order/${data.order.id}`)
+            navigate(`/orders/${data.order.id}`)
         } catch(error: any) {
             toast.error((error.response?.data?.message || error.message || "Erro ao realizar pedido."))
         } finally {

@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "lucide-react";
 import { categoriesData, dummyProducts } from "../../assets/assets";
 import { Loading } from "../../components/Loading";
+import api from "../../config/api";
+import { toast } from "react-hot-toast/headless";
 
 
 export default function AdminProductForm() {
     const { id } = useParams();
     const isEdit = Boolean(id);
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(isEdit);
     const [saving, setSaving] = useState(false);
@@ -27,17 +30,81 @@ export default function AdminProductForm() {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (isEdit) {
-                setFormData(() => dummyProducts.find((p) => p.id === id) as any)
+            try {
+                if (isEdit) {
+                    const { data: productData } = await api.get(`/products/${id}`);
+
+                    setFormData({
+                        name: productData.product.name,
+                        description: productData.product.description,
+                        price: String(productData.product.price),
+                        originalPrice: String(productData.product.originalPrice || ""),
+                        image: productData.product.image,
+                        category: productData.product.category,
+                        unit: productData.product.unit,
+                        stock: String(productData.product.stock),
+                        isOrganic: productData.product.isOrganic,
+                    });
+                }
+            } catch (error: any) {
+               toast.error(error.response?.data?.message || "Erro ao buscar produto.");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false)
         };
         fetchData();
     }, [id, isEdit]);
 
-    const handleSubmit = async (e: React.SubmitEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        setSaving(true);
+        try {
+            let finalImageUrl = formData.image;
+
+            if (imageFile) {
+                const formDataToUpload = new FormData();
+                formDataToUpload.append("image", imageFile);
+                const { data: uploadData } = await api.post("/upload", formDataToUpload, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                finalImageUrl = uploadData.url;
+
+                if (!finalImageUrl) {
+                    toast.error("Erro ao fazer upload da imagem. Tente novamente.");
+                    return;
+                }
+            }
+
+            if (!finalImageUrl) {
+                toast.error("Selecione uma imagem do produto.");
+                return;
+            }
+
+            const payload = {
+                ...formData,
+                image: finalImageUrl,
+                price: Number(formData.price),
+                originalPrice: formData.originalPrice ? Number(formData.originalPrice) : 0,
+                stock: Number(formData.stock),
+            };
+
+            if (isEdit) {
+                await api.put(`/products/${id}`, payload);
+                toast.success("Produto editado com sucesso");
+            } else {
+                await api.post("/products", payload);
+                toast.success("Produto adicionado com sucesso");
+            }
+
+            navigate("/admin/products");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao salvar produto.");
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (

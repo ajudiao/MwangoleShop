@@ -1,5 +1,4 @@
 import express from 'express';
-import { prisma } from '../config/prisma.js';
 import auth from '../middleware/auth.js';
 import multer from 'multer';
 import cloudinary from '../config/cloudinary.js';

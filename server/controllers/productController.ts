@@ -123,8 +123,9 @@ export async function updateProduct(req: Request, res: Response) {
 // DELETE /api/products/:id
 export async function deleteProduct(req: Request, res: Response) {
     const { id } = req.params;
-   await prisma.product.delete({
-        where: { id: String(id) }
+   await prisma.product.update({
+        where: { id: String(id) },
+        data: { stock: Number(0) } // Mark as out of stock instead of deleting
     });
-    return res.json({ message: "Product deleted successfully" });
+    return res.json({ message: "Producto marcado como fora de estoque" });
 }
