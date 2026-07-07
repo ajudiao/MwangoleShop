@@ -10,18 +10,23 @@ const deliveyAuth = async (req: Request, res: Response, next: NextFunction) => {
 
         const token = authHeader.split(" ")[1]
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {id: string, role: string}
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { partnerId?: string; id?: string; role: string }
+        const partnerId = decoded.partnerId || decoded.id
 
-        if (decoded.role != "delivery")  {
-            return res.status(403).json({message: "Access danied. Delivery partner only"})
+        if (!partnerId) {
+            return res.status(401).json({ message: "Token is not valid" })
+        }
+
+        if (decoded.role !== "delivery")  {
+            return res.status(403).json({ message: "Access danied. Delivery partner only" })
         }
 
         const partner = await prisma.deliveryPartner.findUnique({
-            where: {id: decoded.id}
+            where: { id: partnerId }
         })
 
-        if(!partner || partner.isActive) {
-            return res.status(403).json({message: "Accout is desactivated"})
+        if (!partner || !partner.isActive) {
+            return res.status(403).json({ message: "Accout is desactivated" })
         }
 
         req.partner = partner

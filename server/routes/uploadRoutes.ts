@@ -27,7 +27,11 @@ uploadRouter.post('/', auth, upload.single('image'), async (req, res) => {
 
     } catch (error: any) {
         console.error("File Upload Error:", error);
-        res.status(500).json({ message: 'File upload failed', error: error.message });
+        const cloudinaryError = error?.error?.message || error?.message || 'Unknown error';
+        res.status(500).json({
+            message: 'File upload failed',
+            error: cloudinaryError,
+        });
     }
 });
 

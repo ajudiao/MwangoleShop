@@ -12,9 +12,9 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const getAuthHeaders = () => ({
     headers: {
-        Authorization: `Bearer ${localStorage.getItem("delivery_token")}`,
+        Authorization: `Bearer ${localStorage.getItem("delivery_token") || ""}`,
     },
-})
+});
 
 export default function DeliveryDashboard() {
 
@@ -38,22 +38,50 @@ export default function DeliveryDashboard() {
         try {
             const { data } = await axios.get(`${API_URL}/delivery/my-deliveries?status=${tab}`, getAuthHeaders());
             setOrders(data.orders || []);
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || "Erro ao buscar entregas.");
+        } catch (error: unknown) {
+            const message = axios.isAxiosError(error) && error.response?.data?.message
+                ? error.response.data.message
+                : "Erro ao buscar entregas.";
+            toast.error(message);
         } finally {
             setLoading(false);
         }
-
     };
 
-
     useEffect(() => {
-        fetchOrders();
+        let isMounted = true;
+
+        const loadOrders = async () => {
+            setLoading(true);
+            try {
+                const { data } = await axios.get(`${API_URL}/delivery/my-deliveries?status=${tab}`, getAuthHeaders());
+                if (isMounted) {
+                    setOrders(data.orders || []);
+                }
+            } catch (error: unknown) {
+                const message = axios.isAxiosError(error) && error.response?.data?.message
+                    ? error.response.data.message
+                    : "Erro ao buscar entregas.";
+                if (isMounted) {
+                    toast.error(message);
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        void loadOrders();
+
+        return () => {
+            isMounted = false;
+        };
     }, [tab]);
 
     // enviar localização a cada 10 segundos se tracking estiver ativo
     useEffect(() => {
-        const activeOrders = orders.filter((o) => ["Assigned", "PickedUp"].includes(o.status));
+        const activeOrders = orders.filter((o) => ["Assigned", "Picked", "Out for Delivery"].includes(o.status));
 
         if (activeOrders.length === 0 || !tracking) {
             if (watchIdRef.current != null) {
@@ -77,6 +105,7 @@ export default function DeliveryDashboard() {
             maximumAge: 10000,
         })
 
+        // Tambem 
         const interval = setInterval(() => {
             navigator.geolocation.getCurrentPosition(sendLocation, () => { }, { enableHighAccuracy: true })
         }, 10000)
@@ -93,47 +122,55 @@ export default function DeliveryDashboard() {
 
     const handleUpdateStatus = async (orderId: string, status: string) => {
         try {
-            await axios.put(`${API_URL}/delivery/my-delivery/${orderId}/status`, { status }, getAuthHeaders())
-            toast.success(`Status updated to ${status}`)
-            fetchOrders()
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || "Failed")
+            await axios.put(`${API_URL}/delivery/my-deliveries/${orderId}/status`, { status }, getAuthHeaders());
+            toast.success(`Status updated to ${status}`);
+            await fetchOrders();
+        } catch (error: unknown) {
+            const message = axios.isAxiosError(error) && error.response?.data?.message
+                ? error.response.data.message
+                : "Failed";
+            toast.error(message);
         }
     };
 
     const handleComplete = async () => {
         if (!otpModal || !otp) return;
+        setSubmitting(true);
         try {
-            axios.put(`${API_URL}/delivery/my-deliveries/${otpModal}/complete`, { otp }, getAuthHeaders())
+            await axios.put(`${API_URL}/delivery/my-deliveries/${otpModal}/complete`, { otp }, getAuthHeaders());
 
-            toast.success('Delivery completed')
-            setOtpModal(null)
-            setOtp("")
-            fetchOrders()
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || "Failed")
+            toast.success("Delivery completed");
+            setOtpModal(null);
+            setOtp("");
+            await fetchOrders();
+        } catch (error: unknown) {
+            const message = axios.isAxiosError(error) && error.response?.data?.message
+                ? error.response.data.message
+                : "Failed";
+            toast.error(message);
         } finally {
-            setSubmitting(false)
+            setSubmitting(false);
         }
-
     };
 
     const handleCancel = async () => {
         if (!cancelModal) return;
         setSubmitting(true);
         try {
-            axios.put(`${API_URL}/delivery/my-deliveries/${cancelModal}/cancel`, { reason: cancelReason }, getAuthHeaders())
+            await axios.put(`${API_URL}/delivery/my-deliveries/${cancelModal}/cancel`, { reason: cancelReason }, getAuthHeaders());
 
-            toast.success('Pedido cancelled')
-            setOtpModal(null)
-            setCancelModal("")
-            fetchOrders()
-        } catch (error: any) {
-            toast.error(error?.response?.data?.message || "Failed")
+            toast.success("Pedido cancelled");
+            setCancelModal(null);
+            await fetchOrders();
+        } catch (error: unknown) {
+            const message = axios.isAxiosError(error) && error.response?.data?.message
+                ? error.response.data.message
+                : "Failed";
+            toast.error(message);
         } finally {
-            setSubmitting(false)
+            setSubmitting(false);
         }
-    }
+    };
 
     return (
         <div className="space-y-6">

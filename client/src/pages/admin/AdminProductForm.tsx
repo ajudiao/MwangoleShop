@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "lucide-react";
-import { categoriesData, dummyProducts } from "../../assets/assets";
+import { categoriesData } from "../../assets/assets";
 import { Loading } from "../../components/Loading";
 import api from "../../config/api";
 import { toast } from "react-hot-toast/headless";
@@ -65,11 +65,7 @@ export default function AdminProductForm() {
             if (imageFile) {
                 const formDataToUpload = new FormData();
                 formDataToUpload.append("image", imageFile);
-                const { data: uploadData } = await api.post("/upload", formDataToUpload, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                });
+                const { data: uploadData } = await api.post("/upload", formDataToUpload);
                 finalImageUrl = uploadData.url;
 
                 if (!finalImageUrl) {

@@ -49,21 +49,25 @@ export const loginDeliveryPartner = async (req: Request, res: Response) => {
 // GET /api/delivery/my-deliveries
 export const getMyDeliveries = async (req: Request, res: Response) => {
     const { status } = req.query
+    const partnerId = req.partner?.id
 
-    const where: any = { deliveryPartnerId: req.user!.id }    
+    if (!partnerId) {
+        return res.status(401).json({ message: "Unauthorized" })
+    }
+
+    const where: any = { deliveryPartnerId: partnerId }
     if (status === "active") {
-        where.status = { in: ["Assigend", "Packed", "Out for Delivery"] } 
+        where.status = { in: ["Assigned", "Packed", "Out for Delivery"] }
     } else if (status === "completed") {
-        where.status = { in: ["Delivered", "Cancelled"] } 
+        where.status = { in: ["Delivered", "Cancelled"] }
     }
 
     const orders = await prisma.order.findMany({
         where,
         include: { user: { select: { name: true, email: true, phone: true }}},
-        orderBy: { createdAt: "desc"
-        }
+        orderBy: { createdAt: "desc" }
     })
-    res.json({orders})
+    res.json({ orders })
 }
 
 // Get single delivery details
