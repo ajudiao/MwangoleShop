@@ -10,8 +10,8 @@ export default function OrderOTP({ order }: { order: any }) {
                     <KeyRoundIcon className="size-5" />
                 </div>
                 <div>
-                    <h3 className="font-semibold">Delivery OTP</h3>
-                    <p className="text-xs text-white/70">Share this with your delivery partner</p>
+                    <h3 className="font-semibold">OTP de entrega</h3>
+                    <p className="text-xs text-white/70">Compartilhe isso com o parceiro de entrega</p>
                 </div>
             </div>
             <div className="flex gap-2 mt-2">

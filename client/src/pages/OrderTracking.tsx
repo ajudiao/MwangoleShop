@@ -14,6 +14,27 @@ export function OrderTracking() {
 
     const currency = import.meta.env.VITE_CURRENCY_SYMBOL || "AOA";
 
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case "Placed":
+                return "Pedido realizado";
+            case "Confirmed":
+                return "Confirmado";
+            case "Assigned":
+                return "Entregador atribuído";
+            case "Packed":
+                return "Embalado";
+            case "Out for Delivery":
+                return "Saiu para entrega";
+            case "Delivered":
+                return "Entregue";
+            case "Cancelled":
+                return "Cancelado";
+            default:
+                return status;
+        }
+    };
+
     const { id } = useParams()
     const navigate = useNavigate()
     const [order, setOrder] = useState<Order | null>(null)
@@ -75,7 +96,7 @@ export function OrderTracking() {
                         <p className="text-sm text-app-text-light mt-1">Feito em {new Date(order!.createdAt).toLocaleDateString("pt-BR", { month: "long", day: "numeric", year: "numeric" })}</p>
                     </div>
                     <span className={`px-4 py-1.5 text-sm font-semibold rounded-full ${order.status === "Delivered" ? "bg-red-100 text-green-700" : order!.status === "Cancelled" ? "bg-red-100 text-red-700" : "bg-app-orange/10 text-app-orange"}`}>
-                        {order!.status}
+                        {getStatusLabel(order!.status)}
                     </span>
                 </div>
                 <div className="grid lg:grid-cols-3 gap-6">

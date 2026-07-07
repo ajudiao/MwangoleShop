@@ -40,11 +40,11 @@ export default function LiveMap({ order, liveLocation }: { order: any, liveLocat
                         <MapContainer center={[liveLocation.lat, liveLocation.lng]} zoom={15} style={{ height: "100%", width: "100%" }} zoomControl={false}>
                             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                             <Marker position={[liveLocation.lat, liveLocation.lng]} icon={truckIcon}>
-                                <Popup>Delivery Partner</Popup>
+                                <Popup>Parceiro de entrega</Popup>
                             </Marker>
                             {order.shippingAddress.lat && order.shippingAddress.lng && (
                                 <Marker position={[order.shippingAddress.lat, order.shippingAddress.lng]} icon={destinationIcon}>
-                                    <Popup>Delivery Address</Popup>
+                                    <Popup>Endereço de entrega</Popup>
                                 </Marker>
                             )}
                             <MapUpdater center={[liveLocation.lat, liveLocation.lng]} />
@@ -53,14 +53,14 @@ export default function LiveMap({ order, liveLocation }: { order: any, liveLocat
                         <MapContainer center={[order.shippingAddress.lat, order.shippingAddress.lng]} zoom={15} style={{ height: "100%", width: "100%" }} zoomControl={false}>
                             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                             <Marker position={[order.shippingAddress.lat, order.shippingAddress.lng]} icon={destinationIcon}>
-                                <Popup>Delivery Address</Popup>
+                                <Popup>Endereço de entrega</Popup>
                             </Marker>
                         </MapContainer>
                     ) : (
                         <div className="h-full bg-app-green/5 flex-center">
                             <div className="text-center">
                                 <MapPinIcon className="size-8 text-app-green/40 mx-auto mb-2" />
-                                <p className="text-sm text-app-green/50 font-medium">Waiting for delivery partner location...</p>
+                                <p className="text-sm text-app-green/50 font-medium">Aguardando a localização do parceiro de entrega...</p>
                             </div>
                         </div>
                     )}

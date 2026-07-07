@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'; // importa os tipos do Express para tipar req e res
 import { prisma } from '../config/prisma.js'; // importa a instância do Prisma para acessar o banco
 import { inngest } from '../inngest/index.js';
+import Stripe from 'stripe'; // importa a biblioteca Stripe para processar pagamentos
 
 // Create order
 // POST /api/orders
@@ -100,6 +101,30 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
 
     if (paymentMethod === 'card') { // caso o pagamento seja por cartão
         // aqui poderia entrar a lógica de pagamento via cartão, como Stripe
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string); // inicializa Stripe com chave secreta
+
+        const session = await stripe.checkout.sessions.create({
+            success_url: `${req.headers.origin}/order?clearCart=true`,
+            cancel_url: `${req.headers.origin}/checkout`,
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: `Order #${order.id}`,
+                        },
+                        unit_amount: Math.round(total * 100), // total em centavos
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            metadata: {
+                orderId: order.id, // adiciona ID do pedido nos metadados da sessão
+            },
+        });
+
+        return res.json({ order, stripeSessionId: session.id }); // retorna o pedido e ID da sessão Stripe para o cliente
 
     }
 
@@ -115,7 +140,7 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
     // comentário: o código acima já reduz o estoque dos produtos do pedido
 
     // Send stock update events for each product in the order
-    for(const item of orderItems) {
+    for (const item of orderItems) {
         await inngest.send({
             name: "inventory/stock.updated",
             data: { productId: item.productId }
