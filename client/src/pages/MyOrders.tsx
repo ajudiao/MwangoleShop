@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import type { Order } from "../types"
 import { Link, useSearchParams } from "react-router-dom"
-import { dummyDashboardOrdersData, statusColors } from "../assets/assets"
+import { statusColors } from "../assets/assets"
 import { useCart } from "../contexts/CartContext"
 import { Loading } from "../components/Loading"
 import { CalendarIcon, ChevronRightIcon, PackageIcon } from "lucide-react"
