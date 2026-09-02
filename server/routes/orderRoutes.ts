@@ -6,11 +6,12 @@ import admin from "../middleware/admin.js";
 
 const orderRouter = express.Router()
 
+orderRouter.get('/all', auth, admin, getAllOrders)
 orderRouter.post('/', auth, createOrder)
 orderRouter.get('/', auth, getUserOrders)
-orderRouter.get('/all', auth, admin, getAllOrders)
-orderRouter.get('/:id', auth, getOrder)
-orderRouter.put('/:id/status', auth, admin, updateOrdersStatus)
+orderRouter.get('/:id/live-location', auth, getOrderLocation)
 orderRouter.get('/:id/location', auth, getOrderLocation)
+orderRouter.put('/:id/status', auth, admin, updateOrdersStatus)
+orderRouter.get('/:id', auth, getOrder)
 
 export default orderRouter

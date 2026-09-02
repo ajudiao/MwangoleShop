@@ -31,16 +31,19 @@ export function Products() {
       if (category) params.set('category', category)
       if(organic) params.set('organic', organic)
       if(sort) params.set('sort', sort)
+      if(minPrice) params.set('minPrice', minPrice)
       if(maxPrice) params.set('maxPrice', maxPrice)
         params.set('page', String(page))
         params.set('limit', '12')
 
         const { data } = await api.get(`/products/?${params.toString()}`)
-        setProducts(data.products)
-        setTotalPages(data.pages)
+        console.log('API Response:', data)
+        setProducts(data.products || [])
+        setTotalPages(data.pages || 1)
     } catch (error: unknown) {
       // safe error handling without optional-chaining on unknown
       if (axios.isAxiosError(error)) {
+        console.error('API Error:', error.response?.data)
         toast.error((error.response && (error.response as any).data && (error.response as any).data.message) || error.message)
       } else if (error instanceof Error) {
         toast.error(error.message)
@@ -102,7 +105,7 @@ export function Products() {
                   {activeCategory ? activeCategory.name : "Todos os produtos"}
                 </h1>
                 <p className="text-sm text-app-text-light mt-0.5">
-                  {products.length} Produto não encontrado
+                  {products?.length || 0} Produto{(products?.length ?? 0) !== 1 ? 's' : ''} encontrado{(products?.length ?? 0) !== 1 ? 's' : ''}
                 </p>
               </div>
 
@@ -136,7 +139,7 @@ export function Products() {
 
             {loading ? (
               <Loading />
-            ) : products.length === 0 ? (
+            ) : !products || products.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-lg font-semibold text-app-green mb-2">
                   Nenhum produto encontrado
@@ -154,7 +157,7 @@ export function Products() {
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 xl:gap-8">
-                {products.map(
+                {products && products.map(
                   (product) =>
                     product.stock > 0 && (
                       <ProductCard key={product.id} product={product} />

@@ -19,7 +19,7 @@ export const inngest = new Inngest({ id: "mwangole-shop" });
 const checkLowStock = inngest.createFunction(
   {
     id: "check-low-stock",
-    name: "Low Stock Alert",
+    name: "Alerta de Estoque Baixo",
     triggers: [{ event: "inventory/stock.updated" }],
   },
   async ({ event, step }) => {
@@ -48,10 +48,10 @@ const checkLowStock = inngest.createFunction(
       try {
         await sendEmail({
           to: adminEmails.join(","),
-          subject: `Low Stock Alert: ${product.name}`,
+          subject: `Alerta de Estoque Baixo: ${product.name}`,
           body: `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;">
                         <div style="background: linear-gradient(135deg, #dc2626, #ef4444); padding: 24px 28px;">
-                            <h2 style="color: #fff; margin: 0; font-size: 20px;">Low Stock Alert</h2>
+                            <h2 style="color: #fff; margin: 0; font-size: 20px;">Alerta de Estoque Baixo</h2>
                         </div>
                         <div style="padding: 28px;">
                             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
@@ -62,17 +62,17 @@ const checkLowStock = inngest.createFunction(
                                 </div>
                             </div>
                             <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 16px; text-align: center;">
-                                <p style="margin: 0 0 4px; font-size: 13px; color: #991b1b; font-weight: 600;">CURRENT STOCK</p>
+                                <p style="margin: 0 0 4px; font-size: 13px; color: #991b1b; font-weight: 600;">ESTOQUE ATUAL</p>
                                 <p style="margin: 0; font-size: 32px; font-weight: 700; color: #dc2626;">${product.stock}</p>
-                                <p style="margin: 4px 0 0; font-size: 12px; color: #6b7280;">units remaining</p>
+                                <p style="margin: 4px 0 0; font-size: 12px; color: #6b7280;">unidades restantes</p>
                             </div>
-                            <p style="margin: 20px 0 0; font-size: 13px; color: #9ca3af; text-align: center;">Please restock this item as soon as possible.</p>
+                            <p style="margin: 20px 0 0; font-size: 13px; color: #9ca3af; text-align: center;">Por favor, reabastece este item o quanto antes.</p>
                         </div>
                     </div>`,
         });
       } catch (error) {
-        console.error("Failed to send low stock alert", error);
-        return { skipped: true, reason: "Email send failed" };
+        console.error("Falha ao enviar alerta de estoque baixo", error);
+        return { skipped: true, reason: "Falha ao enviar email" };
       }
     });
 
@@ -84,7 +84,7 @@ const checkLowStock = inngest.createFunction(
 const sendMonthlyOffers = inngest.createFunction(
   {
     id: "send-monthly-offers",
-    name: "Monthly Payday offers",
+    name: "Ofertas de Dia de Pagamento",
     triggers: [cron("0 10 1 * *")],
   },
   async ({ step }) => {
@@ -136,19 +136,19 @@ const sendMonthlyOffers = inngest.createFunction(
           try {
             await sendEmail({
               to: u.email,
-              subject: `Fresh Picks Just For You!`,
+              subject: `Escolhas Frescas Só Para Ti!`,
               body: `<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;">
                 
                 <div style="background: linear-gradient(135deg, #f97316, #fb923c); padding: 24px 28px;">
-                    <h2 style="color: #fff; margin: 0; font-size: 20px;">Fresh Picks Just For You!</h2>
+                    <h2 style="color: #fff; margin: 0; font-size: 20px;">Escolhas Frescas Só Para Ti!</h2>
                     <p style="color: rgba(255,255,255,0.85); margin: 6px 0 0; font-size: 13px;">
-                        Exclusive offers to kick off your month right
+                        Ofertas exclusivas para começar o mês com tudo
                     </p>
                 </div>
 
                 <div style="padding: 28px;">
                     <p style="margin: 0 0 20px; font-size: 15px; color: #374151;">
-                        Hi <strong>${u.name}</strong>, check out this month's top picks!
+                        Olá <strong>${u.name}</strong>, confira as melhores escolhas deste mês!
                     </p>
 
                     <table width="100%" cellpadding="0" cellspacing="0">
@@ -189,7 +189,7 @@ const sendMonthlyOffers = inngest.createFunction(
                     <div style="text-align: center; margin-top: 24px;">
                         <a href="${getClientUrl()}/products"
                            style="display: inline-block; background: #16a34a; color: #fff; padding: 12px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px;">
-                           Shop All Deals →
+                           Ver Todas as Ofertas →
                         </a>
                     </div>
                 </div>
@@ -197,7 +197,7 @@ const sendMonthlyOffers = inngest.createFunction(
             });
             sentCount += 1;
           } catch (error) {
-            console.error(`Failed to send monthly offer to ${u.email}`, error);
+            console.error(`Falha ao enviar oferta mensal para ${u.email}`, error);
           }
         }
       });
@@ -210,7 +210,7 @@ const sendMonthlyOffers = inngest.createFunction(
 const autoAssignRider = inngest.createFunction(
   {
     id: "auto-assign-rider",
-    name: "Auto Assign Mwangole Rider",
+    name: "Atribuir Automaticamente Entregador Mwangole",
     triggers: [{ event: "order/placed" }],
   },
   async ({ event, step }) => {
@@ -223,11 +223,11 @@ const autoAssignRider = inngest.createFunction(
       const order = await prisma.order.findUnique({ where: { id: orderId } });
 
       // Ignora se o pedido não existir, já estiver atribuído ou cancelado
-      if (!order) return { skipped: true, reason: "Order not found" };
+      if (!order) return { skipped: true, reason: "Pedido não encontrado" };
       if (order.deliveryPartnerId)
-        return { skipped: true, reason: "Already assigned" };
+        return { skipped: true, reason: "Já atribuído" };
       if (["Cancelled", "Delivered"].includes(order.status as string))
-        return { skipped: true, reason: `Order is ${order.status}` };
+        return { skipped: true, reason: `Pedido é ${order.status}` };
 
       // Procura um entregador ativo que não esteja em entrega no momento
       const busyOrders = await prisma.order.findMany({
@@ -250,7 +250,7 @@ const autoAssignRider = inngest.createFunction(
       });
 
       if (!availableRider)
-        return { skipped: true, reason: "No riders available" };
+        return { skipped: true, reason: "Nenhum entregador disponível" };
 
       // Gera um OTP de 6 dígitos
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -260,7 +260,7 @@ const autoAssignRider = inngest.createFunction(
       ) as any[];
       history.push({
         status: "Assigned",
-        note: `Auto-assigned to ${availableRider.name}`,
+        note: `Automaticamente atribuído a ${availableRider.name}`,
         timestamp: new Date(),
       });
 

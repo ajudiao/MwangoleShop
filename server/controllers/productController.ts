@@ -35,7 +35,6 @@ export const getFlashDeals = async (req: Request, res: Response) => {
 // GET /api/products/
 export async function getAllProducts(req: Request, res: Response) {
     const { category, minPrice, maxPrice, search, sort, page, limit } = req.query
-    console.log('getAllProducts (patched) called with', { category, minPrice, maxPrice, search, sort, page, limit })
 
     try {
         const where: any = {}

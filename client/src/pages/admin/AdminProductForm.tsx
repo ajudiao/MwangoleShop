@@ -55,7 +55,7 @@ export default function AdminProductForm() {
         fetchData();
     }, [id, isEdit]);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setSaving(true);

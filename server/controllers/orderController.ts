@@ -104,7 +104,7 @@ export const createOrder = async (req: Request, res: Response) => { // cria um p
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string); // inicializa Stripe com chave secreta
 
         const session = await stripe.checkout.sessions.create({
-            success_url: `${req.headers.origin}/order?clearCart=true`,
+            success_url: `${req.headers.origin}/orders?clearCart=true`,
             cancel_url: `${req.headers.origin}/checkout`,
             line_items: [
                 {

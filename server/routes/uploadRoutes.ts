@@ -11,8 +11,9 @@ const upload = multer({ storage: storage });
 uploadRouter.post('/', auth, upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
-            return res.status(400).json({ message: 'No image file provided' });
+            return res.status(400).json({ message: 'Nenhum arquivo de imagem fornecido' });
         }
+        
         const buffer = Buffer.from(req.file.buffer).toString('base64');
         const dataURI = "data:" + req.file.mimetype + ";base64," + buffer;
 
@@ -21,15 +22,13 @@ uploadRouter.post('/', auth, upload.single('image'), async (req, res) => {
             resource_type: 'auto',
         });
         
-        // res.status(200).json({ message: 'File uploaded successfully', data: result });
-
         res.json({url: result.secure_url})
 
     } catch (error: any) {
-        console.error("File Upload Error:", error);
-        const cloudinaryError = error?.error?.message || error?.message || 'Unknown error';
+        console.error("Erro de Upload de Arquivo:", error);
+        const cloudinaryError = error?.error?.message || error?.message || 'Erro desconhecido';
         res.status(500).json({
-            message: 'File upload failed',
+            message: 'Falha ao fazer upload do arquivo',
             error: cloudinaryError,
         });
     }
