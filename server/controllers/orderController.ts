@@ -6,150 +6,155 @@ import Stripe from 'stripe'; // importa a biblioteca Stripe para processar pagam
 // Create order
 // POST /api/orders
 export const createOrder = async (req: Request, res: Response) => { // cria um pedido
-    const { items, shippingAddress: shippingAddressBody, addressId, paymentMethod } = req.body; // pega itens, endereço/ID e forma de pagamento do corpo da requisição
+    try {
+        const { items, shippingAddress: shippingAddressBody, addressId, paymentMethod } = req.body; // pega itens, endereço/ID e forma de pagamento do corpo da requisição
 
-    if (!Array.isArray(items) || items.length === 0) { // valida se existe pelo menos um item no pedido
-        return res.status(400).json({ message: 'Order items are required' }); // retorna erro 400 se não houver itens
-    }
-
-    // Busca os produtos reais no banco para evitar manipulação de preços no front-end
-    const sanitizedItems = items.map((item: any) => ({
-        ...item,
-        productId: item.productId ?? item.product?.id,
-    }));
-
-    const validProductIds = sanitizedItems
-        .map((item) => item.productId)
-        .filter((id) => typeof id === 'string' && id.trim() !== '') as string[];
-
-    if (validProductIds.length !== sanitizedItems.length) {
-        console.error('Invalid order items payload', { items: sanitizedItems });
-        return res.status(400).json({ message: 'Each order item must include a valid productId' });
-    }
-
-    const uniqueProductIds = Array.from(new Set(validProductIds));
-    const products = await prisma.product.findMany({ where: { id: { in: uniqueProductIds } } }); // busca os produtos pelo ID
-
-    const productMap: Record<string, (typeof products)[0]> = {}; // cria um mapa para acessar produtos por ID
-    products.forEach((product) => {
-        productMap[product.id] = product; // preenche o mapa com cada produto
-    });
-
-    for (const item of items) { // valida cada item do pedido
-        const product = productMap[item.productId]; // encontra o produto no mapa
-        if (!product || (product.stock ?? 0) < item.quantity) { // se produto não existir ou não tiver estoque suficiente
-            return res.status(404).json({ message: 'Insufficient stock for one or more items' }); // retorna erro de estoque insuficiente
+        if (!Array.isArray(items) || items.length === 0) { // valida se existe pelo menos um item no pedido
+            return res.status(400).json({ message: 'Order items are required' }); // retorna erro 400 se não houver itens
         }
-    }
 
-    const orderItems = items.map((item: any) => { // transforma itens do pedido usando dados do banco
-        const dbProduct = productMap[item.productId]; // pega produto do banco
-        if (!dbProduct) throw new Error(`Product with ID ${item.productId} not found`); // garante que o produto exista
-        return {
-            productId: dbProduct.id, // ID do produto
-            name: dbProduct.name, // nome do produto
-            image: dbProduct.image, // imagem do produto
-            price: dbProduct.price, // preço real do banco
-            quantity: item.quantity, // quantidade pedida pelo cliente
-            unit: dbProduct.unit, // unidade do produto
+        // Busca os produtos reais no banco para evitar manipulação de preços no front-end
+        const sanitizedItems = items.map((item: any) => ({
+            ...item,
+            productId: item.productId ?? item.product?.id,
+        }));
+
+        const validProductIds = sanitizedItems
+            .map((item) => item.productId)
+            .filter((id) => typeof id === 'string' && id.trim() !== '') as string[];
+
+        if (validProductIds.length !== sanitizedItems.length) {
+            console.error('Invalid order items payload', { items: sanitizedItems });
+            return res.status(400).json({ message: 'Each order item must include a valid productId' });
         }
-    })
 
-    const subtotal = orderItems.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0); // calcula subtotal somando preço * quantidade
+        const uniqueProductIds = Array.from(new Set(validProductIds));
+        const products = await prisma.product.findMany({ where: { id: { in: uniqueProductIds } } }); // busca os produtos pelo ID
 
-    const deliveryFee = subtotal > 100 ? 0 : 2.5; // define frete grátis para pedidos acima de 100
-    const taxPercent = 0.25; // valor percentual do imposto
-    const tax = Math.round(subtotal * taxPercent * 100) / 100; // calcula imposto e arredonda para 2 casas
-    const total = Math.round((subtotal + deliveryFee + tax) * 100) / 100; // calcula total final e arredonda
-
-    // Resolve shipping address: prefer explicit shippingAddress, otherwise resolve addressId
-    let shippingAddress = shippingAddressBody
-    if (!shippingAddress && addressId) {
-        const addr = await prisma.address.findUnique({ where: { id: String(addressId) } })
-        // ensure address belongs to user when possible
-        if (addr && addr.userId === req.user?.id) {
-            shippingAddress = {
-                id: addr.id,
-                label: addr.label,
-                address: addr.address,
-                city: addr.city,
-                state: addr.state,
-                zip: addr.zip,
-                lat: addr.lat,
-                lng: addr.lng,
-            }
-        }
-    }
-
-    if (!shippingAddress) {
-        return res.status(400).json({ message: 'shippingAddress or addressId is required' })
-    }
-
-    const order = await prisma.order.create({ // cria o pedido no banco de dados
-        data: {
-            userId: req.user?.id as string, // associa pedido ao usuário autenticado
-            items: orderItems, // itens convertidos para salvar no banco
-            shippingAddress, // endereço de entrega (JSON)
-            paymentMethod, // forma de pagamento escolhida
-            subtotal, // subtotal do pedido
-            deliveryFee, // valor do frete
-            tax, // imposto do pedido
-            total, // valor total do pedido
-            statusHistory: [{ status: 'Placed', note: "Order placed successfully", timestamp: new Date() }], // histórico inicial do pedido
-        }
-    })
-
-    if (paymentMethod === 'card') { // caso o pagamento seja por cartão
-        // aqui poderia entrar a lógica de pagamento via cartão, como Stripe
-        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string); // inicializa Stripe com chave secreta
-
-        const session = await stripe.checkout.sessions.create({
-            success_url: `${req.headers.origin}/orders?clearCart=true`,
-            cancel_url: `${req.headers.origin}/checkout`,
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: `Order #${order.id}`,
-                        },
-                        unit_amount: Math.round(total * 100), // total em centavos
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            metadata: {
-                orderId: order.id, // adiciona ID do pedido nos metadados da sessão
-            },
+        const productMap: Record<string, (typeof products)[0]> = {}; // cria um mapa para acessar produtos por ID
+        products.forEach((product) => {
+            productMap[product.id] = product; // preenche o mapa com cada produto
         });
 
-        return res.json({ order, stripeSessionId: session.id }); // retorna o pedido e ID da sessão Stripe para o cliente
+        for (const item of items) { // valida cada item do pedido
+            const product = productMap[item.productId]; // encontra o produto no mapa
+            if (!product || (product.stock ?? 0) < item.quantity) { // se produto não existir ou não tiver estoque suficiente
+                return res.status(404).json({ message: 'Insufficient stock for one or more items' }); // retorna erro de estoque insuficiente
+            }
+        }
 
-    }
-
-    res.json({ order }) // retorna o pedido criado para o cliente
-
-    // Atualiza o estoque de cada produto após criar o pedido
-    for (const item of orderItems) {
-        await prisma.product.update({
-            where: { id: item.productId },
-            data: { stock: { decrement: item.quantity } }
+        const orderItems = items.map((item: any) => { // transforma itens do pedido usando dados do banco
+            const dbProduct = productMap[item.productId]; // pega produto do banco
+            if (!dbProduct) throw new Error(`Product with ID ${item.productId} not found`); // garante que o produto exista
+            return {
+                productId: dbProduct.id, // ID do produto
+                name: dbProduct.name, // nome do produto
+                image: dbProduct.image, // imagem do produto
+                price: dbProduct.price, // preço real do banco
+                quantity: item.quantity, // quantidade pedida pelo cliente
+                unit: dbProduct.unit, // unidade do produto
+            }
         })
-    }
-    // comentário: o código acima já reduz o estoque dos produtos do pedido
 
-    // Send stock update events for each product in the order
-    for (const item of orderItems) {
+        const subtotal = orderItems.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0); // calcula subtotal somando preço * quantidade
+
+        const deliveryFee = subtotal > 100 ? 0 : 2.5; // define frete grátis para pedidos acima de 100
+        const taxPercent = 0.25; // valor percentual do imposto
+        const tax = Math.round(subtotal * taxPercent * 100) / 100; // calcula imposto e arredonda para 2 casas
+        const total = Math.round((subtotal + deliveryFee + tax) * 100) / 100; // calcula total final e arredonda
+
+        // Resolve shipping address: prefer explicit shippingAddress, otherwise resolve addressId
+        let shippingAddress = shippingAddressBody
+        if (!shippingAddress && addressId) {
+            const addr = await prisma.address.findUnique({ where: { id: String(addressId) } })
+            // ensure address belongs to user when possible
+            if (addr && addr.userId === req.user?.id) {
+                shippingAddress = {
+                    id: addr.id,
+                    label: addr.label,
+                    address: addr.address,
+                    city: addr.city,
+                    state: addr.state,
+                    zip: addr.zip,
+                    lat: addr.lat,
+                    lng: addr.lng,
+                }
+            }
+        }
+
+        if (!shippingAddress) {
+            return res.status(400).json({ message: 'shippingAddress or addressId is required' })
+        }
+
+        const order = await prisma.order.create({ // cria o pedido no banco de dados
+            data: {
+                userId: req.user?.id as string, // associa pedido ao usuário autenticado
+                items: orderItems, // itens convertidos para salvar no banco
+                shippingAddress, // endereço de entrega (JSON)
+                paymentMethod, // forma de pagamento escolhida
+                subtotal, // subtotal do pedido
+                deliveryFee, // valor do frete
+                tax, // imposto do pedido
+                total, // valor total do pedido
+                statusHistory: [{ status: 'Placed', note: "Order placed successfully", timestamp: new Date() }], // histórico inicial do pedido
+            }
+        })
+
+        if (paymentMethod === 'card') { // caso o pagamento seja por cartão
+            // aqui poderia entrar a lógica de pagamento via cartão, como Stripe
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! as string); // inicializa Stripe com chave secreta
+
+            const session = await stripe.checkout.sessions.create({
+                success_url: `${req.headers.origin}/orders?clearCart=true`,
+                cancel_url: `${req.headers.origin}/checkout`,
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: `Order #${order.id}`,
+                            },
+                            unit_amount: Math.round(total * 100), // total em centavos
+                        },
+                        quantity: 1,
+                    },
+                ],
+                mode: 'payment',
+                metadata: {
+                    orderId: order.id, // adiciona ID do pedido nos metadados da sessão
+                },
+            });
+
+            return res.json({ order, url: session.url }); // retorna a URL de checkout do Stripe
+
+        }
+
+        res.json({ order }) // retorna o pedido criado para o cliente
+
+        // Atualiza o estoque de cada produto após criar o pedido
+        for (const item of orderItems) {
+            await prisma.product.update({
+                where: { id: item.productId },
+                data: { stock: { decrement: item.quantity } }
+            })
+        }
+        // comentário: o código acima já reduz o estoque dos produtos do pedido
+
+        // Send stock update events for each product in the order
+        for (const item of orderItems) {
+            await inngest.send({
+                name: "inventory/stock.updated",
+                data: { productId: item.productId }
+            })
+        }
         await inngest.send({
-            name: "inventory/stock.updated",
-            data: { productId: item.productId }
+            name: "order/placed",
+            data: { orderId: order.id }
         })
+    } catch (error: any) {
+        const message = error?.message || 'Erro ao criar pedido';
+        res.status(500).json({ message });
     }
-    await inngest.send({
-        name: "order/placed",
-        data: { orderId: order.id }
-    })
 }
 
 

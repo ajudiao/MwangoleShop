@@ -171,6 +171,7 @@ export function Products() {
               <div className="flex-center  gap-2 mt-16">
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <button
+                    key={i}
                     onClick={() => {
                       updateFilter("page", String(i + 1));
                       scrollTo(0, 0);
